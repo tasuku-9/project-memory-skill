@@ -14,8 +14,10 @@ You're deep into a project with an AI agent. Then:
 - You switch models. The new one knows nothing.
 - A teammate joins. There's no onboarding doc.
 - Six months later, nobody remembers why that decision was made.
+- An insight from last week's experiment never connects to today's decision.
+- You can't tell which hypotheses you've already tested and ruled out.
 
-Every long-running project hits this. Most people work around it by re-explaining everything from scratch. This skill solves it structurally.
+Every long-running project hits this. Most people work around it by re-explaining everything from scratch. This skill solves it structurally — not just as a backup, but as a structured knowledge base that accumulates and becomes analysable over time.
 
 ## How it works
 

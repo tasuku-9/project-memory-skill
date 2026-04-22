@@ -6,8 +6,13 @@ description: >
   and project memory across sessions. Manages roadmap, decision log,
   hypotheses, research evidence, and recovery checkpoints as separate
   canonical files so no single transcript becomes the source of truth.
+  Also use when you want to ensure no insight, decision, or failed experiment
+  is lost — structured accumulation makes the project knowledge base
+  analysable over time: which hypotheses were tested, which decisions were
+  made and why, which blockers recurred, and how confidence evolved.
   Trigger phrases: resume work, context lost, switch model, handoff brief,
-  update project docs, classify decisions, audit memory, migrate context.
+  update project docs, classify decisions, audit memory, migrate context,
+  log experiment, track hypothesis, what did we decide, why did we choose.
 compatibility: "Claude Code, Codex CLI, Gemini CLI, Cursor, any agent supporting the Agent Skills standard"
 license: MIT
 metadata:
