@@ -1,0 +1,41 @@
+# Generated / noisy files
+.git/
+.hg/
+.svn/
+.cache/
+cache/
+tmp/
+.tmp/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+dist/
+build/
+target/
+.next/
+coverage/
+
+# Logs and generated run output
+logs/
+*.log
+*.jsonl
+run-*/
+*-run-log-*/
+
+# Private / sensitive
+private/
+secrets/
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+credentials*.json
+
+# Large generated exports
+exports/
+artifacts/
+outputs/

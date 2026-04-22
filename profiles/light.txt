@@ -1,0 +1,8 @@
+README.md
+CURRENT_STATE.md
+RECOVERY_NOTES.md
+LOGBOOK.md
+DOCS_GUIDE.md
+CONTEXT_MANIFEST.md
+.contextignore
+.gitignore

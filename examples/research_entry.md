@@ -1,0 +1,22 @@
+## RES-2026-04-22-001 - Test whether separate continuity files reduce drift
+
+- date: 2026-04-22
+- question: Does separating truth, plans, decisions, and research reduce continuity drift?
+- hypothesis / expectation: The separation will make recovery and handoff more reliable.
+- method: Run a real interrupted session and compare resume quality with and without the structured workspace.
+- inputs / sources:
+  - interrupted project notes
+  - continuity memory templates
+- result: The structured workspace reduced time spent reconstructing status and next steps.
+- interpretation: Separation is useful for medium and long-running work.
+- confidence: medium
+- limitations: The test used one workspace and one interruption pattern.
+- changed my mind about: A single recovery note is not enough without canonical supporting files.
+- next test: Repeat with a multi-threaded project.
+- related hypotheses:
+  - `HYPOTHESIS_LAB.md`
+- related decisions:
+  - `DECISION_LOG.md`
+- should update current state?: yes
+- human_brief_update: yes
+- human_brief_reason: The evidence changed confidence in the current operating model and may affect human decisions.

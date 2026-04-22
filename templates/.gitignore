@@ -1,0 +1,27 @@
+# Private / sensitive
+private/
+secrets/
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+credentials*.json
+
+# Caches
+.cache/
+cache/
+tmp/
+.tmp/
+__pycache__/
+.pytest_cache/
+node_modules/
+
+# Logs / generated output
+logs/
+*.log
+*.jsonl
+outputs/
+exports/
+artifacts/
