@@ -4,7 +4,7 @@ Durable project memory across chat loss, model switches, and multi-session resea
 
 Hypotheses don't silently become facts. Decisions record why, not just what. Recovery takes seconds, not hours of re-explanation.
 
-Works with Claude Code, Codex CLI, Gemini CLI, Cursor, and any agent that supports the Agent Skills standard.
+Designed for Claude Code and Codex CLI. Expected to work with Gemini CLI, Cursor, and other agents supporting the Agent Skills standard.
 
 ## The problem
 
@@ -34,6 +34,8 @@ The skill separates project knowledge into canonical markdown files, each with a
 | `RECOVERY_NOTES.md` | How to resume after interruption |
 | `CONTEXT_MANIFEST.md` | Read order, canonical sources, ignore rules |
 | `DOCS_GUIDE.md` | Rules for where to write information |
+| `LITERATURE_NOTES.md` | Prior work and its relevance (academic profile) |
+| `FIGURES_LOG.md` | Figures and tables linked to data and methods (academic profile) |
 | `GLOSSARY.md` | Project-specific terminology |
 
 The AI agent maintains these files during the session. The human usually doesn't write them directly.
@@ -110,6 +112,15 @@ Log what we just discovered in RESEARCH_LOG.md format with methods, results, con
 別モデルに渡すための handoff brief を作って。仮説・事実・決定・未解決点を混ぜないで。
 ```
 
+```text
+Log this paper in LITERATURE_NOTES.md and connect it to our current hypotheses.
+```
+
+```text
+この実験結果をRESEARCH_LOGに記録して、関連する仮説のステータスを更新して。
+図表が出たらFIGURES_LOGにも追加して。
+```
+
 ## Profiles
 
 ### Light
@@ -131,6 +142,15 @@ For research, experiments, literature review, product discovery, or exploratory 
 - `RESEARCH_LOG.md`
 - Stronger promotion rules from hypothesis to confirmed truth
 - Evidence and confidence fields
+
+### Academic
+
+For managing a research paper, thesis, or publication. Includes everything in Research plus:
+
+- `LITERATURE_NOTES.md` — prior work and its relevance to your research
+- `FIGURES_LOG.md` — every figure and table linked to its data source and generation method
+
+The academic profile connects literature to hypotheses, tracks which findings support or challenge your claims, and ensures every figure is reproducible. The promotion rules enforce that only evidence-backed claims enter your results.
 
 ## Agent integration
 

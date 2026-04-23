@@ -12,12 +12,13 @@ description: >
   made and why, which blockers recurred, and how confidence evolved.
   Trigger phrases: resume work, context lost, switch model, handoff brief,
   update project docs, classify decisions, audit memory, migrate context,
-  log experiment, track hypothesis, what did we decide, why did we choose.
-compatibility: "Claude Code, Codex CLI, Gemini CLI, Cursor, any agent supporting the Agent Skills standard"
+  log experiment, track hypothesis, what did we decide, why did we choose,
+  manage paper, track literature, log figures, thesis management.
+compatibility: "Designed for Claude Code and Codex CLI. Expected to work with Gemini CLI, Cursor, and other agents supporting the Agent Skills standard."
 license: MIT
 metadata:
   author: continuity-research-memory-skill
-  version: "1.2"
+  version: "2.0"
 ---
 
 # Project Memory Skill
@@ -30,6 +31,8 @@ The skill separates **current truth**, **plans**, **decisions**, **evidence**, *
 
 Use this skill when the user asks to:
 
+- start a new project and set up structured memory from scratch
+- introduce structured memory into an existing project with accumulated context
 - resume work after a lost or interrupted chat
 - create a durable project memory or research log
 - migrate context from one model, agent, workspace, or repository to another
@@ -37,6 +40,7 @@ Use this skill when the user asks to:
 - produce a handoff brief for a human or another model
 - distinguish confirmed facts from hypotheses, plans, and unresolved questions
 - audit whether a project has enough continuity documentation
+- manage a research paper or thesis: track literature, connect findings to hypotheses, log figures and tables with their data sources
 
 Do not use this skill as a replacement for domain expertise, citations, or source verification. It is a continuity and documentation-routing skill.
 
@@ -65,6 +69,8 @@ Route information by status:
 | Unverified ideas and speculative explanations | `HYPOTHESIS_LAB.md` |
 | Human-facing orientation summary | `HUMAN_BRIEF.md` |
 | Fast session resume checkpoint | `RECOVERY_NOTES.md` |
+| Prior work, references, and their relevance (academic profile) | `LITERATURE_NOTES.md` |
+| Figures, tables, and visual outputs (academic profile) | `FIGURES_LOG.md` |
 | File roles, read order, ignore rules | `CONTEXT_MANIFEST.md` and `DOCS_GUIDE.md` |
 
 ## Canonical memory rule
@@ -190,6 +196,27 @@ At the top, maintain `## Tracked threads` so parallel work is visible at a glanc
 
 This file is a summary layer, not the canonical proof layer.
 
+### Write to `LITERATURE_NOTES.md` when
+
+- a prior work, paper, article, or external source is read or referenced
+- a source supports or challenges a hypothesis in `HYPOTHESIS_LAB.md`
+- a methodological choice is informed by existing literature
+- the relationship between external findings and this project's work should be recorded
+
+Each entry should connect the source to this project's hypotheses, methods, or decisions. Do not just list references — explain relevance.
+
+This file is used in the `academic` profile. If the profile is `research` or lower and this file does not exist, do not create it unless the user is working toward a publication.
+
+### Write to `FIGURES_LOG.md` when
+
+- a figure, chart, diagram, or table is produced
+- a visualization is updated or superseded
+- the data source, generation method, or intended use of a visual output should be traceable
+
+Each entry should link the visual to its data source and generation method so it can be reproduced during peer review or revision.
+
+This file is used in the `academic` profile. If the profile is `research` or lower and this file does not exist, do not create it unless the user is managing visual outputs for a publication.
+
 ### Write to `RECOVERY_NOTES.md` when
 
 - a session ends
@@ -261,6 +288,26 @@ These may change more often and should be reviewed regularly.
 ## Output modes
 
 Choose the mode that matches the user’s task.
+
+### Init mode
+
+Use when the workspace has just been created and all canonical files are empty templates. See `tasks/init_session.md` for the full process.
+
+Detect init state: `CURRENT_STATE.md` contains only template placeholders, `RECOVERY_NOTES.md` has no dated entries, `HUMAN_BRIEF.md` has no summary.
+
+Ask four questions: project purpose, current stage, immediate goal, known constraints or decisions. Write answers into `CURRENT_STATE.md`, `ROADMAP.md`, `DECISION_LOG.md`, `HUMAN_BRIEF.md`, and `RECOVERY_NOTES.md`. Leave other files empty until content arises naturally.
+
+Return a summary of what was written and where.
+
+### Adopt mode
+
+Use when introducing project-memory into an existing project that has code, documents, or history but no structured memory workspace. See `tasks/adopt_existing.md` for the full process.
+
+Detect adopt state: project directory has working files but no `CONTEXT_MANIFEST.md` or `CURRENT_STATE.md`.
+
+Inventory existing docs, README, git log, and user knowledge. Classify each piece of information by type and route it to the correct canonical file. Slim down the README to entry point only. If `AGENTS.md` or `CLAUDE.md` exists, point it to `CONTEXT_MANIFEST.md` instead of duplicating memory there.
+
+Return a summary of sources inventoried, classification results, and gaps.
 
 ### Resume mode
 

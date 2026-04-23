@@ -55,7 +55,7 @@ def copy_file(rel_path: str, target_dir: Path, project_name: str, today: str, ov
 def main() -> int:
     parser = argparse.ArgumentParser(description="Initialize continuity memory docs in a project directory.")
     parser.add_argument("target", help="Target project/workspace directory")
-    parser.add_argument("--profile", choices=["light", "standard", "research"], default="research")
+    parser.add_argument("--profile", choices=["light", "standard", "research", "academic"], default="research")
     parser.add_argument("--project-name", help="Project name for template placeholders")
     parser.add_argument("--date", help="Date to use for template placeholders, default: today")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing files")

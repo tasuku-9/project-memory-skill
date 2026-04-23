@@ -21,7 +21,7 @@ hypothesis
 
 ## Before you push
 1. Update `metadata.author` in SKILL.md with your GitHub username
-2. Run: git init && git add . && git commit -m "Initial release v1.2"
+2. Run: git init && git add . && git commit -m "Release v2.0"
 3. Create repo: gh repo create project-memory-skill --public --source=. --push
 4. Add topics in GitHub repo Settings
 

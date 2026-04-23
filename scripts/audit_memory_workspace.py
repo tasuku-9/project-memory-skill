@@ -214,7 +214,7 @@ def audit(target: Path, profile: str) -> dict[str, object]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Audit continuity memory workspace docs.")
     parser.add_argument("target", help="Target project/workspace directory")
-    parser.add_argument("--profile", choices=["light", "standard", "research"], default="research")
+    parser.add_argument("--profile", choices=["light", "standard", "research", "academic"], default="research")
     parser.add_argument("--json", action="store_true", help="Emit JSON")
     args = parser.parse_args()
 

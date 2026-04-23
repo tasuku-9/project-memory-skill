@@ -66,7 +66,7 @@ Add a pointer at the top or bottom of README:
 ```md
 ## Project memory
 
-This project uses [project-memory](https://github.com/tasuku-9/project-memory-skill) for structured context management. See `CONTEXT_MANIFEST.md` for the read order and canonical file roles.
+This project uses [project-memory](<REPO_URL>) for structured context management. See `CONTEXT_MANIFEST.md` for the read order and canonical file roles.
 ```
 
 ### Phase 5: Handle AGENTS.md / CLAUDE.md
