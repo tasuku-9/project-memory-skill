@@ -1,3 +1,5 @@
+.github/workflows/ci.yml
+.gitignore
 README.md
 SKILL.md
 examples/decision_entry.md
@@ -5,13 +7,16 @@ examples/handoff_brief.md
 examples/recovery_checkpoint.md
 examples/research_entry.md
 manifest.txt
+profiles/academic.txt
 profiles/light.txt
 profiles/research.txt
 profiles/standard.txt
 scripts/audit_memory_workspace.py
 scripts/init_memory_workspace.py
 scripts/make_handoff_brief.py
+tasks/adopt_existing.md
 tasks/conflict_resolution.md
+tasks/init_session.md
 tasks/migrate_context.md
 tasks/privacy.md
 tasks/research_logging.md
@@ -23,11 +28,14 @@ templates/CONTEXT_MANIFEST.md
 templates/CURRENT_STATE.md
 templates/DECISION_LOG.md
 templates/DOCS_GUIDE.md
+templates/FIGURES_LOG.md
 templates/GLOSSARY.md
 templates/HUMAN_BRIEF.md
 templates/HYPOTHESIS_LAB.md
+templates/LITERATURE_NOTES.md
 templates/LOGBOOK.md
 templates/README.md
 templates/RECOVERY_NOTES.md
 templates/RESEARCH_LOG.md
 templates/ROADMAP.md
+tests/test_smoke.py

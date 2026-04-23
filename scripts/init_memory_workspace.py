@@ -33,6 +33,24 @@ def render_template(text: str, project_name: str, today: str) -> str:
     return text.replace("{{PROJECT_NAME}}", project_name).replace("{{DATE}}", today)
 
 
+def format_doc_list(items: list[str]) -> str:
+    if not items:
+        return ""
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]} and {items[1]}"
+    return f"{', '.join(items[:-1])}, and {items[-1]}"
+
+
+def recommended_next_targets(files: list[str]) -> str:
+    preferred = ["README.md", "CURRENT_STATE.md"]
+    if "HUMAN_BRIEF.md" in files:
+        preferred.append("HUMAN_BRIEF.md")
+    preferred.append("the latest RECOVERY_NOTES.md checkpoint")
+    return format_doc_list(preferred)
+
+
 def copy_file(rel_path: str, target_dir: Path, project_name: str, today: str, overwrite: bool, dry_run: bool) -> tuple[str, str]:
     src = TEMPLATES_DIR / rel_path
     dst = target_dir / rel_path
@@ -88,7 +106,7 @@ def main() -> int:
         print(f"- {status}: {count}")
 
     if not args.dry_run:
-        print("\nNext: fill in README.md, CURRENT_STATE.md, HUMAN_BRIEF.md, and the latest RECOVERY_NOTES.md checkpoint.")
+        print(f"\nNext: fill in {recommended_next_targets(files)}.")
         print("If the repo also uses AGENTS.md or CLAUDE.md, point them to CONTEXT_MANIFEST.md and the canonical docs instead of duplicating memory there.")
     return 0
 
