@@ -180,6 +180,7 @@ This only works if the memory lives in normal files in the repository — not in
 ## Package layout
 
 ```text
+.github/                       # CI and issue templates
 SKILL.md                       # Instructions for the AI agent
 README.md                      # This file — guide for humans
 manifest.txt                   # File manifest
@@ -189,6 +190,14 @@ scripts/                       # Helper scripts (init, audit, handoff)
 examples/                      # Sample log entries and handoff briefs
 tasks/                         # Task-specific guidance docs
 ```
+
+## Feedback and issues
+
+If something is confusing or broken, please open a GitHub issue.
+
+- Use the bug report form for broken scripts, incorrect file routing, missing templates, or behavior that contradicts the documented rules.
+- Use the improvement form for new profile ideas, workflow pain points, agent compatibility gaps, or onboarding/doc quality feedback.
+- Include the tool or agent you used, the profile (`light`, `standard`, `research`, or `academic`), and a small prompt or reproduction example when possible.
 
 ## License
 

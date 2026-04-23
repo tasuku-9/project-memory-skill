@@ -1,0 +1,56 @@
+name: Improvement idea
+description: Suggest a clearer workflow, better docs, a new template, or another skill improvement.
+title: "[idea] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest an improvement.
+  - type: dropdown
+    id: area
+    attributes:
+      label: What area does this affect most?
+      options:
+        - onboarding / README
+        - scripts
+        - templates
+        - profiles
+        - agent compatibility
+        - issue / contribution flow
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: pain
+    attributes:
+      label: What felt awkward, unclear, or missing?
+      placeholder: It is hard to know when to use research vs academic, and the distinction is not obvious until you read several files.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What change would help?
+      placeholder: Add a short decision guide in the README and a script flag that prints the file set for each profile.
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Why is this worth doing?
+      description: Who benefits, and what gets easier?
+      placeholder: New users can choose a profile faster and are less likely to create the wrong workspace shape.
+    validations:
+      required: true
+  - type: input
+    id: examples
+    attributes:
+      label: Related files, prompts, or examples
+      placeholder: README.md, profiles/research.txt, tasks/adopt_existing.md
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra notes
+      description: Optional follow-up thoughts, edge cases, or tradeoffs.

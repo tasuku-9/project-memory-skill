@@ -1,0 +1,85 @@
+name: Bug report
+description: Report a broken script, mismatch between docs and behavior, or an onboarding problem.
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. A small reproduction is usually enough.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where did you hit the problem?
+      options:
+        - scripts
+        - templates
+        - documentation
+        - issue templates / repo metadata
+        - agent behavior / skill instructions
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Which tool or agent were you using?
+      options:
+        - Codex
+        - Claude Code
+        - Gemini CLI
+        - Cursor
+        - Other / mixed
+    validations:
+      required: true
+  - type: dropdown
+    id: profile
+    attributes:
+      label: Which profile was involved?
+      options:
+        - light
+        - standard
+        - research
+        - academic
+        - not sure
+        - not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the actual behavior or the confusing result.
+      placeholder: The init script told me to update HUMAN_BRIEF.md even though the light profile does not create that file.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How can someone reproduce it?
+      description: Include a prompt, command, or small sequence of steps.
+      placeholder: |
+        1. Run `python scripts/init_memory_workspace.py /tmp/demo --profile light`
+        2. Read the final "Next:" message
+        3. Notice that it references a file that does not exist
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+      placeholder: The message should only mention files that exist in the selected profile.
+    validations:
+      required: true
+  - type: input
+    id: files
+    attributes:
+      label: Relevant files or docs
+      description: Optional, but very helpful.
+      placeholder: scripts/init_memory_workspace.py, README.md
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Versions, screenshots, copied output, or anything else that helps.
