@@ -1,5 +1,7 @@
 # project-memory
 
+Japanese overview: [README.ja.md](README.ja.md)
+
 Durable project memory across chat loss, model switches, and multi-session research.
 
 Hypotheses don't silently become facts. Decisions record why, not just what. Recovery takes seconds, not hours of re-explanation.

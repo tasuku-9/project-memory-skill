@@ -3,6 +3,7 @@
 .github/ISSUE_TEMPLATE/improvement.yml
 .github/workflows/ci.yml
 .gitignore
+README.ja.md
 README.md
 SKILL.md
 examples/decision_entry.md
