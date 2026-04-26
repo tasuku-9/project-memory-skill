@@ -58,6 +58,16 @@ Capture broadly. Promote narrowly.
 
 Do not let hypotheses, plans, or recovery notes silently become truth.
 
+## Language behavior
+
+Communicate with the user in the user's language by default.
+
+Preserve the repository's dominant language for canonical docs and file names unless the user explicitly asks to change that policy.
+
+If the repository language is unclear or mixed, confirm the canonical documentation language once before writing or translating structured memory files.
+
+If chat language and doc language differ, explain in the chat language and keep the canonical docs in the chosen documentation language.
+
 Route information by status:
 
 | Information type | Canonical file |
@@ -305,7 +315,7 @@ Use when introducing project-memory into an existing project that has code, docu
 
 Detect adopt state: project directory has working files but no `CONTEXT_MANIFEST.md` or `CURRENT_STATE.md`.
 
-Inventory existing docs, README, git log, and user knowledge. Classify each piece of information by type and route it to the correct canonical file. Slim down the README to entry point only. If `AGENTS.md` or `CLAUDE.md` exists, point it to `CONTEXT_MANIFEST.md` instead of duplicating memory there.
+Inventory existing docs, README, git log, and user knowledge. Detect the dominant repository language and preserve it for canonical docs unless the user asks otherwise. If the repo language is unclear or mixed, confirm the documentation language once before writing structured memory files. Classify each piece of information by type and route it to the correct canonical file. Slim down the README to entry point only. If `AGENTS.md` or `CLAUDE.md` exists, point it to `CONTEXT_MANIFEST.md` instead of duplicating memory there.
 
 Return a summary of sources inventoried, classification results, and gaps.
 

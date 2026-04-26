@@ -1,6 +1,6 @@
 # Adopt Existing Project Task
 
-Use this when introducing project-memory into a project that already has code, documents, history, or accumulated context — but no structured memory workspace yet.
+Use this when introducing project-memory into a project that already has code, documents, history, or accumulated context, but no structured memory workspace yet.
 
 ## Detecting adopt state
 
@@ -15,13 +15,15 @@ A project is in adopt state when:
 
 ### Phase 1: Inventory existing context
 
-1. Read `README.md` if present. Note what it contains: setup instructions, current state, decisions, plans, hypotheses — most READMEs mix all of these.
+1. Read `README.md` if present. Note what it contains: setup instructions, current state, decisions, plans, hypotheses. Most READMEs mix all of these.
 2. Check for existing documentation: `docs/`, `notes/`, `CHANGELOG.md`, `AGENTS.md`, `CLAUDE.md`, `ADR/` (architecture decision records), or similar.
-3. Scan recent git log if available: `git log --oneline -30`. Look for decision points, direction changes, and major milestones.
-4. Ask the user:
+3. Detect the dominant repository language from the README, docs, and existing file names. If the documentation language is unclear or mixed, plan to confirm it once before writing canonical docs.
+4. Scan recent git log if available: `git log --oneline -30`. Look for decision points, direction changes, and major milestones.
+5. Ask the user:
    - **What is this project and where is it now?**
    - **Is there anything not in the files that I should know?** Decisions made in chat, rejected approaches, unwritten rules.
    - **What is the immediate goal?**
+   - **Only if language is unclear or mixed:** Which language should canonical docs use?
 
 ### Phase 2: Classify and route
 
@@ -38,19 +40,21 @@ Map existing information into canonical files. Use this classification:
 | Project-specific jargon, abbreviations, internal names | `GLOSSARY.md` |
 | Setup instructions, "how to run this" | Keep in `README.md` |
 
+Preserve the repository's established documentation language for canonical files unless the user explicitly wants to change it.
+
 ### Phase 3: Write canonical files
 
 Write in this order:
 
-1. `CURRENT_STATE.md` — extract confirmed truths from README and existing docs
-2. `DECISION_LOG.md` — extract past decisions with rationale. If rationale is missing, record the decision and mark rationale as `unknown — predates project-memory`
-3. `ROADMAP.md` — extract plans, TODOs, and known blockers
-4. `RESEARCH_LOG.md` — extract any documented experiments or test results
-5. `HYPOTHESIS_LAB.md` — extract unverified ideas and open questions
-6. `HUMAN_BRIEF.md` — write a fresh summary based on what was classified
-7. `RECOVERY_NOTES.md` — first checkpoint
-8. `CONTEXT_MANIFEST.md` — set profile and read order
-9. `GLOSSARY.md` — extract terminology if any was found
+1. `CURRENT_STATE.md` - extract confirmed truths from README and existing docs
+2. `DECISION_LOG.md` - extract past decisions with rationale. If rationale is missing, record the decision and mark rationale as `unknown - predates project-memory`
+3. `ROADMAP.md` - extract plans, TODOs, and known blockers
+4. `RESEARCH_LOG.md` - extract any documented experiments or test results
+5. `HYPOTHESIS_LAB.md` - extract unverified ideas and open questions
+6. `HUMAN_BRIEF.md` - write a fresh summary based on what was classified
+7. `RECOVERY_NOTES.md` - first checkpoint
+8. `CONTEXT_MANIFEST.md` - set profile, read order, and documentation language if it was confirmed
+9. `GLOSSARY.md` - extract terminology if any was found
 
 ### Phase 4: Slim down the README
 
@@ -123,6 +127,6 @@ If the project already uses `AGENTS.md`, `CLAUDE.md`, or similar tool-facing fil
 
 - Copying README content into canonical files without classifying it. Each piece of information should be routed to exactly one file based on its type.
 - Deleting the README. README stays as the entry point with setup instructions.
-- Inventing rationale for old decisions. If the reason is unknown, write `unknown — predates project-memory`. Do not guess.
+- Inventing rationale for old decisions. If the reason is unknown, write `unknown - predates project-memory`. Do not guess.
 - Trying to capture everything at once. Focus on what matters now. Old history can be backfilled later if needed.
-- Duplicating content across canonical files and AGENTS.md / CLAUDE.md. The canonical docs are the source of truth; tool files just point to them.
+- Duplicating content across canonical files and `AGENTS.md` / `CLAUDE.md`. The canonical docs are the source of truth; tool files just point to them.

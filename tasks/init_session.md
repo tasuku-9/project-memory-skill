@@ -20,14 +20,14 @@ If any of these files contain real content, this is not an init session. Use `re
    - **Where are you now?** Current stage, maturity, or progress.
    - **What is the immediate goal?** What should happen next.
    - **What constraints or decisions already exist?** Known rules, chosen tools, rejected approaches, or anything the agent should not re-evaluate.
-3. Do not ask more than these four unless the user volunteers additional context. Start with minimal viable memory and let it grow through use.
+3. Do not ask more than these four unless the canonical documentation language is unclear. In that case, ask one extra confirmation and record the answer in `CONTEXT_MANIFEST.md` or `DOCS_GUIDE.md`. Start with minimal viable memory and let it grow through use.
 4. Write the answers into canonical files in this order:
-   - `CURRENT_STATE.md` — project purpose, current stage, known constraints
-   - `ROADMAP.md` — immediate goal as the first NOW item, any mentioned future work as NEXT or LATER
-   - `DECISION_LOG.md` — any decisions or rejected alternatives the user mentioned
-   - `HUMAN_BRIEF.md` — one-paragraph summary, current goal, main blocker if known
-   - `RECOVERY_NOTES.md` — first checkpoint with today's date
-   - `CONTEXT_MANIFEST.md` — update the profile and last-updated date
+   - `CURRENT_STATE.md` - project purpose, current stage, known constraints
+   - `ROADMAP.md` - immediate goal as the first NOW item, any mentioned future work as NEXT or LATER
+   - `DECISION_LOG.md` - any decisions or rejected alternatives the user mentioned
+   - `HUMAN_BRIEF.md` - one-paragraph summary, current goal, main blocker if known
+   - `RECOVERY_NOTES.md` - first checkpoint with today's date
+   - `CONTEXT_MANIFEST.md` - update the profile, last-updated date, and documentation language if it was confirmed
 5. Leave `RESEARCH_LOG.md`, `HYPOTHESIS_LAB.md`, and `GLOSSARY.md` empty until content naturally arises. Do not fill them with placeholders.
 6. Return a summary of what was written and where.
 

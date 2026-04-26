@@ -11,6 +11,13 @@ Tool-specific memory features may help execution, but they are not the sole sour
 
 If the repository also uses `AGENTS.md`, `CLAUDE.md`, or similar files, those files should point to this manifest and the canonical docs instead of duplicating long-lived memory.
 
+## Language policy
+
+- User-facing communication may follow the user's language.
+- Canonical docs and file names should stay in the repository's chosen documentation language unless explicitly changed.
+- If chat language and doc language differ, explain in the chat language without silently translating canonical docs.
+- If the documentation language is unclear or mixed, confirm it once and record the decision here.
+
 ## Read first
 
 1. `RECOVERY_NOTES.md` — latest resume checkpoint

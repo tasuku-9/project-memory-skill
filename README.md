@@ -191,6 +191,19 @@ examples/                      # Sample log entries and handoff briefs
 tasks/                         # Task-specific guidance docs
 ```
 
+## Feedback wanted
+
+This project is still early.
+
+If you try it, I would especially appreciate feedback on:
+
+- whether the file structure feels too heavy or too light
+- whether the promotion rules are clear
+- whether the research / academic profile is useful
+- whether this works naturally with Claude Code, Codex, Gemini CLI, or Cursor
+
+If it seems useful, a star also helps others find it.
+
 ## Feedback and issues
 
 If something is confusing or broken, please open a GitHub issue.

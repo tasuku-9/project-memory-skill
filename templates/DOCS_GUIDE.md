@@ -12,6 +12,13 @@ The AI agent should update them during the chat or coding session.
 Treat repository markdown files as the durable shared memory layer.
 Do not treat tool-internal memory as the canonical source of truth.
 
+## Language policy
+
+- Communicate with the human in their preferred language when practical.
+- Keep structured memory docs in the repository's dominant language unless the human explicitly asks to change it.
+- If chat language and doc language differ, explain in the chat language and keep the canonical docs and file names in the chosen documentation language.
+- If the documentation language is unclear or mixed, confirm it once before writing or translating structured memory files.
+
 ## One-line routing
 
 | File | Write this here |
