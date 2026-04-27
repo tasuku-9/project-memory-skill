@@ -95,6 +95,14 @@ CONTEXT_MANIFEST.md と RECOVERY_NOTES.md から読み始めて、
 更新が必要な memory files を patch-ready で出してください。
 ```
 
+## 仮説整理は人間が確認する
+
+`HYPOTHESIS_LAB.md` は、未整理の思いつき、違和感、半熟の仮説を広く拾うためのファイルです。
+
+AI は作業中に raw idea や仮説を追加してよいですが、仮説や raw spark を勝手に削除してはいけません。
+
+整理したいときは、まず `merge` / `promote` / `link to evidence` / `mark as dropped` / `delete` に分けた候補リストを出します。削除、統合、昇格、棄却の判断は人間が行います。
+
 ## 言語について
 
 - ユーザーへの説明は日本語でも問題ありません

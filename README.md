@@ -177,6 +177,8 @@ This only works if the memory lives in normal files in the repository — not in
 
 **Capture broadly, promote narrowly.** `HYPOTHESIS_LAB.md` should capture more than you think you need. The cost of over-capturing is lower than losing a useful idea.
 
+**Human-reviewed cleanup.** AI agents may propose cleanup candidates for `HYPOTHESIS_LAB.md`, grouped as merge, promote, link to evidence, mark as dropped, or delete. They should not remove hypotheses or raw sparks without human approval.
+
 **Update with discipline.** `HUMAN_BRIEF.md` is reviewed when decisions, risks, blockers, or tracked threads change — and updated only when the human-facing picture actually changed.
 
 ## Package layout

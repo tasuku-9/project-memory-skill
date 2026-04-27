@@ -185,6 +185,24 @@ Ideas that have recurring relevance, clearer structure, or a defined next step.
 Do not require the human to explicitly ask for logging.
 Prefer over-capturing in `HYPOTHESIS_LAB.md` over losing potentially valuable ideas.
 
+### Clean up `HYPOTHESIS_LAB.md`
+
+Capture broadly. Delete cautiously.
+
+Do not silently delete hypotheses or raw sparks from `HYPOTHESIS_LAB.md`.
+
+When cleanup is useful, produce a review list first and group candidates by suggested action:
+
+- merge
+- promote
+- link to evidence
+- mark as dropped
+- delete
+
+The human must approve deletions and major merges before files are modified.
+
+Raw sparks may be deleted after approval. Working hypotheses should usually be marked as `dropped` with a short reason rather than erased.
+
 ### Write to `HUMAN_BRIEF.md` when
 
 - a human needs a fast orientation to decide what to do
