@@ -14,6 +14,10 @@ Do not treat tool-specific hidden memory as the canonical source of truth.
 
 Project memory is a routed memory system, not a checklist of files to update every time.
 
+Before reading beyond `CONTEXT_MANIFEST.md`, identify which memory files are relevant to the current update.
+For non-trivial work, briefly state which files will be read and which relevant files will not be read.
+Do not preemptively read the full memory set.
+
 Before editing memory files, produce a short update plan that says:
 
 - which files will be updated

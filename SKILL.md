@@ -83,6 +83,16 @@ If you notice you are about to edit memory files without an update plan, stop an
 When one piece of information seems to belong in multiple files, choose one canonical home according to `DOCS_GUIDE.md` and `CONTEXT_MANIFEST.md`.
 Other files may reference the canonical entry, but should not duplicate the full details.
 
+## Read scope rule
+
+Start with `CONTEXT_MANIFEST.md` when present.
+
+Do not preemptively read the full memory set.
+Use the read order as a priority order, not as a checklist.
+
+Before reading additional memory files, identify which files are relevant to the current task.
+For non-trivial work, briefly state which memory files will be read and which relevant files will not be read.
+
 ## Language behavior
 
 Communicate with the user in the user's language by default.

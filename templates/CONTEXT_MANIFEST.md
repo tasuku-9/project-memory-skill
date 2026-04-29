@@ -22,6 +22,8 @@ If the repository also uses `AGENTS.md`, `CLAUDE.md`, or similar files, those fi
 
 This is a priority order for orientation, not a checklist.
 Read only the files needed to understand and route the current work safely.
+Do not preemptively read the full memory set.
+For non-trivial work, briefly state which memory files will be read and which relevant files will not be read.
 
 1. `RECOVERY_NOTES.md` — latest resume checkpoint
 2. `HUMAN_BRIEF.md` — human-facing project orientation
