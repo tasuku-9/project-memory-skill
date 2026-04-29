@@ -12,6 +12,26 @@ The AI agent should update them during the chat or coding session.
 Treat repository markdown files as the durable shared memory layer.
 Do not treat tool-internal memory as the canonical source of truth.
 
+## Routed memory rule
+
+Project memory is not a full-file synchronization system.
+Do not read or update every project-memory file on every run.
+
+Information should be routed to its canonical home.
+Update only the files whose responsibility changed.
+Most sessions should update 1-3 files, not the whole memory set.
+
+Before editing memory files, produce a short update plan covering:
+
+- which files will be updated
+- why each file needs an update
+- which relevant files will not be touched
+
+For small, obvious one-file updates, a one-sentence plan is enough.
+
+If information seems to belong in multiple files, choose the most canonical file using this guide and `CONTEXT_MANIFEST.md`.
+Other files may reference the canonical entry, but should not duplicate the full details.
+
 ## Language policy
 
 - Communicate with the human in their preferred language when practical.

@@ -42,6 +42,10 @@ The skill separates project knowledge into canonical markdown files, each with a
 
 The AI agent maintains these files during the session. The human usually doesn't write them directly.
 
+project-memory is not a checklist of files to update every time.
+It is a routed memory system: agents update only the canonical files whose responsibility changed.
+Most sessions update 1-3 files, not the whole memory set.
+
 ## What makes this different
 
 **Promotion rules** — A hypothesis cannot be promoted to `CURRENT_STATE.md` without evidence in `RESEARCH_LOG.md` or an explicit decision in `DECISION_LOG.md`. This prevents unverified ideas from silently becoming project assumptions.
