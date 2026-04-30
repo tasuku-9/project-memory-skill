@@ -38,8 +38,11 @@ Do not wait for the human to explicitly ask for logging.
 
 Do not write to canonical memory files at the first appearance of an idea.
 Treat new hypotheses, decisions, observations, blockers, risks, and next actions as capture candidates until they stabilize.
+Keep capture candidates silently during the current session.
+Do not announce every candidate or repeatedly say that it is being held for later.
 
 Write capture candidates to memory when the topic changes, the discussion reaches a conclusion, the session is ending or may be interrupted, the human explicitly asks to record something, or a decision, result, blocker, or next action becomes clear enough to preserve.
+After writing, briefly report what was recorded and where.
 
 Capture only material that changes project memory.
 Do not summarize routine conversation, temporary phrasing, or early ideas that are still being refined.
