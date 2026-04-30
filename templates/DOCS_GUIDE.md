@@ -32,6 +32,18 @@ For small, obvious one-file updates, a one-sentence plan is enough.
 If information seems to belong in multiple files, choose the most canonical file using this guide and `CONTEXT_MANIFEST.md`.
 Other files may reference the canonical entry, but should not duplicate the full details.
 
+## Conversation capture
+
+Do not wait for the human to explicitly ask for logging.
+
+When conversation produces a hypothesis, decision, research result, important observation, blocker, risk, or next action that would be costly to reconstruct later, route it to the appropriate canonical file.
+
+Capture only material that changes project memory.
+Do not summarize routine conversation.
+
+Use `RECOVERY_NOTES.md` only as a short resume pointer.
+Do not make it the source of truth.
+
 ## Language policy
 
 - Communicate with the human in their preferred language when practical.

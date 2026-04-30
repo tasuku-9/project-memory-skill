@@ -93,6 +93,18 @@ Use the read order as a priority order, not as a checklist.
 Before reading additional memory files, identify which files are relevant to the current task.
 For non-trivial work, briefly state which memory files will be read and which relevant files will not be read.
 
+## Conversation capture rule
+
+During a work session, do not wait for the human to explicitly ask for logging.
+
+When the conversation produces a hypothesis, decision, research result, important observation, blocker, risk, or next action that would be costly to reconstruct later, route it to the appropriate canonical file.
+
+Capture only material that changes project memory.
+Do not summarize routine conversation.
+
+Use `RECOVERY_NOTES.md` only as a short resume pointer.
+Do not make it the source of truth.
+
 ## Language behavior
 
 Communicate with the user in the user's language by default.
