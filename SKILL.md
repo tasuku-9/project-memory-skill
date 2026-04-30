@@ -97,10 +97,13 @@ For non-trivial work, briefly state which memory files will be read and which re
 
 During a work session, do not wait for the human to explicitly ask for logging.
 
-When the conversation produces a hypothesis, decision, research result, important observation, blocker, risk, or next action that would be costly to reconstruct later, route it to the appropriate canonical file.
+Do not write to canonical memory files at the first appearance of an idea.
+Treat new hypotheses, decisions, observations, blockers, risks, and next actions as capture candidates until they stabilize.
+
+Write capture candidates to memory when the topic changes, the discussion reaches a conclusion, the session is ending or may be interrupted, the human explicitly asks to record something, or a decision, result, blocker, or next action becomes clear enough to preserve.
 
 Capture only material that changes project memory.
-Do not summarize routine conversation.
+Do not summarize routine conversation, temporary phrasing, or early ideas that are still being refined.
 
 Use `RECOVERY_NOTES.md` only as a short resume pointer.
 Do not make it the source of truth.

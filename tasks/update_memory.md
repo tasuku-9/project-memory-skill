@@ -57,14 +57,17 @@ If you are about to edit memory files without an update plan, stop and produce t
 Do not require the human to explicitly ask for logging.
 Prefer over-capturing in `HYPOTHESIS_LAB.md` over losing potentially useful ideas.
 
-During the conversation, capture material that would be costly to reconstruct later:
+During the conversation, treat material that would be costly to reconstruct later as capture candidates:
 
 - hypotheses, hunches, or questions worth revisiting
 - decisions, rejected options, or changes in direction
 - research results, important observations, or failed attempts that teach something
 - blockers, risks, or next actions that affect continuation
 
-Do not summarize routine conversation.
+Do not write capture candidates to canonical memory files at the first appearance of an idea.
+Write them when the topic changes, the discussion reaches a conclusion, the session is ending or may be interrupted, the human explicitly asks to record something, or a decision, result, blocker, or next action becomes clear enough to preserve.
+
+Do not summarize routine conversation, temporary phrasing, or early ideas that are still being refined.
 Use `RECOVERY_NOTES.md` only as a short resume pointer, not as the source of truth.
 
 ## Promotion rule
