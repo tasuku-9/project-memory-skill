@@ -11,6 +11,10 @@ It should answer:
 
 It should not carry the full current truth, full decision history, raw research log, or recovery checkpoints.
 
+project-memory is not a checklist of files to update every time.
+It is a routed memory system: update only the canonical files whose responsibility changed.
+Most sessions update 1-3 files, not the whole memory set.
+
 ## Purpose
 
 <!-- Write a concise description of the project, research area, product, writing task, or long-running work. -->

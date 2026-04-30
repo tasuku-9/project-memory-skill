@@ -10,12 +10,32 @@ The AI agent should route and write updates during the chat or coding session.
 Treat repository markdown files as the durable shared memory layer.
 Do not treat tool-specific hidden memory as the canonical source of truth.
 
+## Update scope protocol
+
+Project memory is a routed memory system, not a checklist of files to update every time.
+
+Before reading beyond `CONTEXT_MANIFEST.md`, identify which memory files are relevant to the current update.
+For non-trivial work, briefly state which files will be read and which relevant files will not be read.
+Do not preemptively read the full memory set.
+
+Before editing memory files, produce a short update plan that says:
+
+- which files will be updated
+- why each file needs an update
+- which relevant files will not be touched
+
+Then apply only the necessary changes.
+Most sessions should update 1-3 files.
+Larger updates are appropriate only for major transitions such as phase changes, major hypothesis confirmation or rejection, architecture or approach changes, release checkpoints, or large migrations.
+
+If you are about to edit memory files without an update plan, stop and produce the plan first.
+
 ## Process
 
 1. Read `CONTEXT_MANIFEST.md` if present.
 2. Read the latest `RECOVERY_NOTES.md` checkpoint.
 3. Read `HUMAN_BRIEF.md` and `CURRENT_STATE.md`.
-4. Read only the relevant parts of `ROADMAP.md`, `DECISION_LOG.md`, `RESEARCH_LOG.md`, and `HYPOTHESIS_LAB.md`.
+4. Read only the relevant parts of `ROADMAP.md`, `DECISION_LOG.md`, `RESEARCH_LOG.md`, and `HYPOTHESIS_LAB.md`; do not treat the file list as a checklist.
 5. Classify each new piece of information by status.
 6. Write patch-ready updates only to the files that should change.
 7. After routing updates, check whether the human-facing picture changed.

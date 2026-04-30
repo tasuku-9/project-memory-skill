@@ -58,6 +58,41 @@ Capture broadly. Promote narrowly.
 
 Do not let hypotheses, plans, or recovery notes silently become truth.
 
+## Routed memory rule
+
+Project memory is not a full-file synchronization system.
+
+Do not read or update every project-memory file on every run.
+Do not treat the file list or read order as a checklist.
+
+Each piece of information should go to its canonical home.
+Update only the files whose canonical responsibility changed.
+
+Most work sessions should update only 1-3 files.
+Larger updates are appropriate only during major transitions, such as phase changes, major hypothesis confirmation or rejection, architecture or approach changes, release checkpoints, or large migrations.
+
+Before editing memory files, produce a short update plan stating:
+
+- which files will be updated
+- why each file needs an update
+- which relevant files will not be touched
+
+For a small, obvious one-file update, a one-sentence plan is enough.
+If you notice you are about to edit memory files without an update plan, stop and produce the plan first.
+
+When one piece of information seems to belong in multiple files, choose one canonical home according to `DOCS_GUIDE.md` and `CONTEXT_MANIFEST.md`.
+Other files may reference the canonical entry, but should not duplicate the full details.
+
+## Read scope rule
+
+Start with `CONTEXT_MANIFEST.md` when present.
+
+Do not preemptively read the full memory set.
+Use the read order as a priority order, not as a checklist.
+
+Before reading additional memory files, identify which files are relevant to the current task.
+For non-trivial work, briefly state which memory files will be read and which relevant files will not be read.
+
 ## Language behavior
 
 Communicate with the user in the user's language by default.
@@ -104,6 +139,9 @@ If the repository also uses `AGENTS.md`, `CLAUDE.md`, or similar tool-facing gui
 ## Default read order
 
 When resuming or migrating a project, read in this order unless `CONTEXT_MANIFEST.md` says otherwise:
+
+This is a priority order for orientation, not a checklist to exhaust on every run.
+Read only as far as needed to route the current task safely.
 
 1. `CONTEXT_MANIFEST.md`
 2. latest entry in `RECOVERY_NOTES.md`
