@@ -17,12 +17,19 @@ A project is in adopt state when:
 
 1. Read `README.md` if present. Note what it contains: setup instructions, current state, decisions, plans, hypotheses. Most READMEs mix all of these.
 2. Check for existing documentation: `docs/`, `notes/`, `CHANGELOG.md`, `AGENTS.md`, `CLAUDE.md`, `ADR/` (architecture decision records), or similar.
-3. Detect the dominant repository language from the README, docs, and existing file names. If the documentation language is unclear or mixed, plan to confirm it once before writing canonical docs.
-4. Scan recent git log if available: `git log --oneline -30`. Look for decision points, direction changes, and major milestones.
-5. Ask the user:
+3. Check for path collisions with project-memory template names, especially `README.md`, `ROADMAP.md`, `DECISION_LOG.md`, `AGENTS.md`, and `CLAUDE.md`. Treat existing same-name files as user-owned.
+4. Detect the dominant repository language from the README, docs, and existing file names. If the documentation language is unclear or mixed, plan to confirm it once before writing canonical docs.
+5. Scan recent git log if available: `git log --oneline -30`. Look for decision points, direction changes, and major milestones.
+6. Recommend a profile and capture trigger strength based on the project shape:
+   - `light`: small personal project, short-lived work, or minimal continuity
+   - `standard`: normal coding, writing, or product work with decisions and next actions
+   - `research`: experiments, evidence, hypotheses, repeated investigation, or debugging loops
+   - `academic`: literature, figures, tables, thesis, paper, or publication workflow
+7. Ask the user:
    - **What is this project and where is it now?**
    - **Is there anything not in the files that I should know?** Decisions made in chat, rejected approaches, unwritten rules.
    - **What is the immediate goal?**
+   - **Does the recommended profile and capture trigger strength fit?** If not, adjust them.
    - **Only if language is unclear or mixed:** Which language should canonical docs use?
 
 ### Phase 2: Classify and route
@@ -44,7 +51,11 @@ Preserve the repository's established documentation language for canonical files
 
 ### Phase 3: Write canonical files
 
-Write in this order:
+Never overwrite existing project files without explicit user approval.
+If a project-memory template path collides with an existing file, choose a non-conflicting location such as `memory/` or `project-memory/`, or keep the existing file as the canonical source if it already serves that role.
+Record the chosen canonical locations in `CONTEXT_MANIFEST.md`.
+
+Write these roles in this order, using the chosen canonical locations:
 
 1. `CURRENT_STATE.md` - extract confirmed truths from README and existing docs
 2. `DECISION_LOG.md` - extract past decisions with rationale. If rationale is missing, record the decision and mark rationale as `unknown - predates project-memory`
@@ -56,16 +67,16 @@ Write in this order:
 8. `CONTEXT_MANIFEST.md` - set profile, read order, and documentation language if it was confirmed
 9. `GLOSSARY.md` - extract terminology if any was found
 
-### Phase 4: Slim down the README
+### Phase 4: Handle README safely
 
-After routing content to canonical files:
+Existing `README.md` is user-owned.
+Do not overwrite, delete, or aggressively slim it down without explicit user approval.
 
-- Remove current-state descriptions from README (now in `CURRENT_STATE.md`)
-- Remove decision history from README (now in `DECISION_LOG.md`)
-- Remove plans and TODOs from README (now in `ROADMAP.md`)
-- Keep: project name, one-paragraph description, setup/install instructions, link to `CONTEXT_MANIFEST.md` for full project context
+After routing content to canonical files, propose README changes rather than applying them automatically:
 
-Add a pointer at the top or bottom of README:
+- Keep project name, one-paragraph description, and setup/install instructions.
+- Optionally move current-state descriptions, decision history, plans, or TODOs into canonical docs.
+- Optionally add a pointer at the top or bottom of README:
 
 ```md
 ## Project memory
@@ -109,9 +120,13 @@ If the project already uses `AGENTS.md`, `CLAUDE.md`, or similar tool-facing fil
 
 ### README changes
 
-- Removed: ...
-- Kept: ...
-- Added: project-memory pointer
+- Proposed: ...
+- Applied only with user approval: ...
+
+### Collision handling
+
+- Existing same-name files: ...
+- Canonical locations chosen: ...
 
 ### Gaps
 
@@ -126,7 +141,8 @@ If the project already uses `AGENTS.md`, `CLAUDE.md`, or similar tool-facing fil
 ## Common mistakes
 
 - Copying README content into canonical files without classifying it. Each piece of information should be routed to exactly one file based on its type.
-- Deleting the README. README stays as the entry point with setup instructions.
+- Overwriting or deleting existing same-name project files. Existing files are user-owned unless the user explicitly says otherwise.
+- Defaulting to the largest profile or strongest capture trigger just to be safe.
 - Inventing rationale for old decisions. If the reason is unknown, write `unknown - predates project-memory`. Do not guess.
 - Trying to capture everything at once. Focus on what matters now. Old history can be backfilled later if needed.
 - Duplicating content across canonical files and `AGENTS.md` / `CLAUDE.md`. The canonical docs are the source of truth; tool files just point to them.

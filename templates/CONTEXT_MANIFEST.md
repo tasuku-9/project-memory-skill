@@ -110,4 +110,16 @@ Update this file when:
 
 Profile: research
 
-Change to `light`, `standard`, or `research` as needed.
+Change to `light`, `standard`, `research`, or `academic` as needed.
+
+## Project-specific operating policies
+
+project-memory is a skeleton.
+Customize these policies to fit the project:
+
+- Capture trigger strength: standard (light, standard, research, or academic)
+- Review cadence:
+- Archive policy:
+- Tool-facing instructions:
+
+Use the lightest policy that preserves the project's real continuity needs.

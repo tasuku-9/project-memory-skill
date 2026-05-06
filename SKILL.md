@@ -111,6 +111,28 @@ Do not summarize routine conversation, temporary phrasing, or early ideas that a
 Use `RECOVERY_NOTES.md` only as a short resume pointer.
 Do not make it the source of truth.
 
+## Profile and customization rule
+
+project-memory is a skeleton, not a fixed operating system.
+Customize the profile, capture trigger strength, review cadence, archive policy, and tool-facing instructions to fit the project.
+
+When initializing an empty workspace or adopting an existing project, recommend the smallest sufficient profile before writing memory files:
+
+- `light`: small personal project, short-lived work, or minimal continuity
+- `standard`: normal coding, writing, or product work with decisions and next actions
+- `research`: experiments, evidence, hypotheses, repeated investigation, or debugging loops
+- `academic`: literature, figures, tables, thesis, paper, or publication workflow
+
+Recommend a capture trigger strength alongside the profile:
+
+- `light`: record only explicit requests, session-end checkpoints, and major decisions
+- `standard`: record topic-boundary decisions, next actions, blockers, and direction changes
+- `research`: also record hypotheses, observations, failed attempts, and evidence changes
+- `academic`: also record literature, methods, figures, tables, and publication-facing traceability
+
+Do not default to the largest profile or strongest capture trigger just to be safe.
+Use the lightest setup that preserves the project's real continuity needs.
+
 ## Language behavior
 
 Communicate with the user in the user's language by default.
@@ -141,9 +163,13 @@ Route information by status:
 The canonical memory lives in version-controlled markdown files in the repository.
 Tool-specific memory features may help execution, but they must not be treated as the only source of truth.
 
+In an existing project, never overwrite or delete existing project files without explicit user approval.
+Treat existing same-name files such as `README.md`, `ROADMAP.md`, `DECISION_LOG.md`, `AGENTS.md`, or `CLAUDE.md` as user-owned.
+If a project-memory template path collides with an existing file, place project-memory files under a non-conflicting directory such as `memory/` or `project-memory/`, or record the chosen canonical locations in `CONTEXT_MANIFEST.md`.
+
 Use:
 
-- `README.md` as the entry point
+- `README.md` as the entry point in a new memory workspace; in an existing project, keep the project README user-owned and use `CONTEXT_MANIFEST.md` to declare canonical memory locations
 - `CURRENT_STATE.md` for current trusted assumptions
 - `ROADMAP.md` for future intended work
 - `DECISION_LOG.md` for adopted, rejected, or deferred decisions
@@ -379,6 +405,8 @@ Use when the workspace has just been created and all canonical files are empty t
 
 Detect init state: `CURRENT_STATE.md` contains only template placeholders, `RECOVERY_NOTES.md` has no dated entries, `HUMAN_BRIEF.md` has no summary.
 
+Before writing files, recommend and confirm the smallest sufficient profile and capture trigger strength.
+
 Ask four questions: project purpose, current stage, immediate goal, known constraints or decisions. Write answers into `CURRENT_STATE.md`, `ROADMAP.md`, `DECISION_LOG.md`, `HUMAN_BRIEF.md`, and `RECOVERY_NOTES.md`. Leave other files empty until content arises naturally.
 
 Return a summary of what was written and where.
@@ -389,7 +417,7 @@ Use when introducing project-memory into an existing project that has code, docu
 
 Detect adopt state: project directory has working files but no `CONTEXT_MANIFEST.md` or `CURRENT_STATE.md`.
 
-Inventory existing docs, README, git log, and user knowledge. Detect the dominant repository language and preserve it for canonical docs unless the user asks otherwise. If the repo language is unclear or mixed, confirm the documentation language once before writing structured memory files. Classify each piece of information by type and route it to the correct canonical file. Slim down the README to entry point only. If `AGENTS.md` or `CLAUDE.md` exists, point it to `CONTEXT_MANIFEST.md` instead of duplicating memory there.
+Inventory existing docs, README, git log, and user knowledge. Detect the dominant repository language and preserve it for canonical docs unless the user asks otherwise. If the repo language is unclear or mixed, confirm the documentation language once before writing structured memory files. Recommend a profile and capture trigger strength based on the project shape. Classify each piece of information by type and route it to the correct canonical file. Do not overwrite existing same-name project files; choose non-conflicting locations and record them in `CONTEXT_MANIFEST.md`. If `AGENTS.md` or `CLAUDE.md` exists, point it to `CONTEXT_MANIFEST.md` instead of duplicating memory there.
 
 Return a summary of sources inventoried, classification results, and gaps.
 

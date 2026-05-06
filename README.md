@@ -46,6 +46,10 @@ project-memory is not a checklist of files to update every time.
 It is a routed memory system: agents update only the canonical files whose responsibility changed.
 Most sessions update 1-3 files, not the whole memory set.
 
+project-memory is a skeleton, not a fixed operating system.
+Choose the smallest sufficient profile and customize capture triggers, review cadence, archive policy, and tool-facing instructions to fit the project.
+When adopting an existing project, do not overwrite existing same-name files; place memory files in non-conflicting locations and record them in `CONTEXT_MANIFEST.md`.
+
 ## What makes this different
 
 **Promotion rules** — A hypothesis cannot be promoted to `CURRENT_STATE.md` without evidence in `RESEARCH_LOG.md` or an explicit decision in `DECISION_LOG.md`. This prevents unverified ideas from silently becoming project assumptions.
