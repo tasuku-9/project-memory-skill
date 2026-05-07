@@ -54,6 +54,7 @@ Preserve the repository's established documentation language for canonical files
 Never overwrite existing project files without explicit user approval.
 If a project-memory template path collides with an existing file, choose a non-conflicting location such as `memory/` or `project-memory/`, or keep the existing file as the canonical source if it already serves that role.
 Record the chosen canonical locations in `CONTEXT_MANIFEST.md`.
+The init script can do this safely with `--memory-dir memory`; when it detects same-name files and no explicit memory directory is given, it writes the generated memory workspace under `memory/` by default.
 
 Write these roles in this order, using the chosen canonical locations:
 
@@ -83,6 +84,8 @@ After routing content to canonical files, propose README changes rather than app
 
 This project uses [project-memory](<REPO_URL>) for structured context management. See `CONTEXT_MANIFEST.md` for the read order and canonical file roles.
 ```
+
+If the memory workspace lives under `memory/`, point to `memory/CONTEXT_MANIFEST.md` instead.
 
 ### Phase 5: Handle AGENTS.md / CLAUDE.md
 

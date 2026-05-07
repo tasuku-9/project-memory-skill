@@ -36,9 +36,7 @@ This is not the full source of truth. After reading the latest entry, check the 
 
 ### Canonical docs to trust
 
-- `CURRENT_STATE.md`
-- `DECISION_LOG.md`
-- `RESEARCH_LOG.md`
+{{ENTRY_CANONICAL_DOCS}}
 ```
 
 ## {{DATE}} - Initial continuity checkpoint
@@ -46,7 +44,7 @@ This is not the full source of truth. After reading the latest entry, check the 
 ### Done
 
 - Initialized continuity memory workspace.
-- Added canonical docs for current truth, plans, decisions, research, hypotheses, human summary, and recovery.
+- {{INITIAL_DOCS_SUMMARY}}
 
 ### Current state
 
@@ -60,11 +58,8 @@ This is not the full source of truth. After reading the latest entry, check the 
 
 ### Next recommended step
 
-- Fill in `README.md`, `CURRENT_STATE.md`, and `HUMAN_BRIEF.md` with project-specific context.
+- {{INITIAL_NEXT_STEP}}
 
 ### Canonical docs to trust
 
-- `CONTEXT_MANIFEST.md`
-- `DOCS_GUIDE.md`
-- `CURRENT_STATE.md`
-- `RECOVERY_NOTES.md`
+{{INITIAL_CANONICAL_DOCS}}

@@ -65,13 +65,19 @@ When adopting an existing project, do not overwrite existing same-name files; pl
 Create a new memory workspace:
 
 ```bash
+python scripts/init_memory_workspace.py /path/to/project --profile standard
+```
+
+For research-heavy work:
+
+```bash
 python scripts/init_memory_workspace.py /path/to/project --profile research
 ```
 
-For a smaller project:
+Adopt an existing project without overwriting same-name files:
 
 ```bash
-python scripts/init_memory_workspace.py /path/to/project --profile standard
+python scripts/init_memory_workspace.py /path/to/project --profile standard --memory-dir memory
 ```
 
 Preview without writing:
@@ -83,7 +89,7 @@ python scripts/init_memory_workspace.py /path/to/project --profile research --dr
 Audit an existing workspace:
 
 ```bash
-python scripts/audit_memory_workspace.py /path/to/project --profile research
+python scripts/audit_memory_workspace.py /path/to/project --profile standard
 ```
 
 Generate a handoff brief from existing docs:
@@ -197,7 +203,7 @@ SKILL.md                       # Instructions for the AI agent
 README.md                      # This file — guide for humans
 manifest.txt                   # File manifest
 templates/                     # Copyable memory workspace templates
-profiles/                      # Profile file lists (light/standard/research)
+profiles/                      # Profile file lists (light/standard/research/academic)
 scripts/                       # Helper scripts (init, audit, handoff)
 examples/                      # Sample log entries and handoff briefs
 tasks/                         # Task-specific guidance docs

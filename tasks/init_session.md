@@ -7,7 +7,7 @@ Use this when the memory workspace has just been created and all canonical files
 A workspace is in init state when all of the following are true:
 
 - `CURRENT_STATE.md` contains only the template placeholders (no project-specific content)
-- `RECOVERY_NOTES.md` has no dated entries
+- `RECOVERY_NOTES.md` has no project-specific checkpoint, or only the generated initial checkpoint
 - `HUMAN_BRIEF.md` has no one-paragraph summary
 
 If any of these files contain real content, this is not an init session. Use `resume_work.md` instead.

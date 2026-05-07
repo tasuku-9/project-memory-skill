@@ -46,16 +46,7 @@ Working hypotheses should usually be marked as `dropped` with a short reason rat
 Use this section for low-commitment captures.
 These may be vague, incomplete, or speculative.
 
-### SPK-{{DATE}}-001
-
-- date: {{DATE}}
-- status: raw
-- spark: Structured memory may reduce context drift better than a single README or chat transcript.
-- why worth keeping: Different information types age differently and should not be trusted equally.
-- next step: Try the workflow for several sessions and compare recovery quality.
-- related files:
-  - `RESEARCH_LOG.md`
-  - `DECISION_LOG.md`
+Add raw sparks here when a project-specific idea, discomfort, possibility, or question is worth preserving.
 
 ## Working hypotheses
 
@@ -76,17 +67,4 @@ Use this section for ideas that have recurring relevance, clearer structure, or 
 - promotion target:
 ```
 
-## HYP-{{DATE}}-001 - Structured memory reduces context drift
-
-- date: {{DATE}}
-- status: active
-- hypothesis: A separated memory workspace will make long-running work easier to resume and migrate than a single README or chat transcript.
-- why it seems plausible: Different information types age differently and should not be trusted equally.
-- what would support it: Faster recovery after interruption; fewer contradictions; clearer decisions.
-- what would weaken or falsify it: Users or agents stop updating the docs because the structure is too heavy.
-- cheapest useful test: Run one project through the workflow for several sessions and audit the docs afterward.
-- related research:
-  - `RESEARCH_LOG.md`
-- related decisions:
-  - `DECISION_LOG.md`
-- promotion target: `CURRENT_STATE.md` if repeatedly useful in practice.
+Add the first project-specific working hypothesis when an idea becomes recurring, structured, or next-step-ready.

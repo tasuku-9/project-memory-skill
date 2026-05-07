@@ -19,7 +19,7 @@ Each entry links a visual output to its data source, generation method, and purp
 **Status**: draft / final / superseded by FIG-xxx
 
 **Data source**: 
-<!-- File path, query, or experiment reference (RSC-xxx) -->
+<!-- File path, query, or experiment reference (RES-xxx) -->
 
 **Generation method**: 
 <!-- Script path, tool, or manual steps to reproduce -->

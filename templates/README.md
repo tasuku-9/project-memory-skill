@@ -23,33 +23,15 @@ Most sessions update 1-3 files, not the whole memory set.
 
 For the current source of truth, read:
 
-1. `CONTEXT_MANIFEST.md`
-2. latest entry in `RECOVERY_NOTES.md`
-3. `HUMAN_BRIEF.md`
-4. `CURRENT_STATE.md`
+{{CURRENT_ORIENTATION}}
 
 ## Document map
 
-| File | Role |
-| --- | --- |
-| `CURRENT_STATE.md` | Current confirmed truth |
-| `ROADMAP.md` | Planned future work |
-| `DECISION_LOG.md` | Decisions and why they were made |
-| `RESEARCH_LOG.md` | Experiments, investigations, evidence, observations |
-| `HYPOTHESIS_LAB.md` | Unverified hypotheses and raw sparks |
-| `HUMAN_BRIEF.md` | Summary for human decisions |
-| `RECOVERY_NOTES.md` | Fast resume notes after interruption |
-| `DOCS_GUIDE.md` | Rules for where to write information |
-| `CONTEXT_MANIFEST.md` | Read order, canonical sources, ignore rules |
-| `GLOSSARY.md` | Project-specific terms |
+{{DOCUMENT_MAP}}
 
 ## How to resume work
 
-1. Read the latest entry in `RECOVERY_NOTES.md`.
-2. Read `HUMAN_BRIEF.md` for orientation.
-3. Check `CURRENT_STATE.md` before trusting old claims.
-4. Use `ROADMAP.md` for next planned work.
-5. Use `DECISION_LOG.md` and `RESEARCH_LOG.md` when you need rationale or evidence.
+{{RESUME_STEPS}}
 
 ## Agent note
 

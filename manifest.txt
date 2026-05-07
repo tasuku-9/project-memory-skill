@@ -3,6 +3,7 @@
 .github/ISSUE_TEMPLATE/improvement.yml
 .github/workflows/ci.yml
 .gitignore
+LICENSE
 README.ja.md
 README.md
 SKILL.md
@@ -42,4 +43,7 @@ templates/README.md
 templates/RECOVERY_NOTES.md
 templates/RESEARCH_LOG.md
 templates/ROADMAP.md
+templates/light/CURRENT_STATE.md
+templates/light/DOCS_GUIDE.md
+templates/light/LOGBOOK.md
 tests/test_smoke.py

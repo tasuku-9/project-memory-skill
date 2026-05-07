@@ -10,18 +10,41 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
+import sys
 from pathlib import Path
 
-FILES = [
-    "CONTEXT_MANIFEST.md",
-    "RECOVERY_NOTES.md",
+PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+PROFILES_DIR = PACKAGE_ROOT / "profiles"
+MEMORY_DIR_CANDIDATES = ["memory", "project-memory"]
+
+PROFILE_CHOICES = ["light", "standard", "research", "academic"]
+
+EXCERPT_ORDER = [
     "HUMAN_BRIEF.md",
     "CURRENT_STATE.md",
     "ROADMAP.md",
-    "DECISION_LOG.md",
-    "RESEARCH_LOG.md",
-    "HYPOTHESIS_LAB.md",
+    "LOGBOOK.md",
+    "LITERATURE_NOTES.md",
+    "FIGURES_LOG.md",
 ]
+
+LATEST_SECTION_PATTERNS = {
+    "DECISION_LOG.md": r"^##\s+DEC-",
+    "RESEARCH_LOG.md": r"^##\s+RES-",
+    "HYPOTHESIS_LAB.md": r"^##\s+HYP-",
+}
+
+
+def load_profile(profile: str) -> list[str]:
+    profile_path = PROFILES_DIR / f"{profile}.txt"
+    if not profile_path.exists():
+        available = ", ".join(sorted(p.stem for p in PROFILES_DIR.glob("*.txt")))
+        raise SystemExit(f"Unknown profile: {profile!r}. Available: {available}")
+    return [
+        line.strip()
+        for line in profile_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    ]
 
 
 def read_text(path: Path) -> str:
@@ -33,6 +56,43 @@ def read_text(path: Path) -> str:
         return path.read_text(errors="replace")
 
 
+def normalize_memory_dir(value: str | None) -> str:
+    if value is None:
+        return ""
+    value = value.strip().replace("\\", "/")
+    if value in {"", ".", "./"}:
+        return ""
+    path = Path(value)
+    if path.is_absolute() or ".." in path.parts:
+        raise SystemExit("--memory-dir must be a relative directory inside the target workspace.")
+    return path.as_posix().strip("/")
+
+
+def detect_memory_dir(target: Path, memory_dir: str | None = None) -> str:
+    if memory_dir is not None:
+        return normalize_memory_dir(memory_dir)
+    if (target / "CONTEXT_MANIFEST.md").exists():
+        return ""
+    for candidate in MEMORY_DIR_CANDIDATES:
+        if (target / candidate / "CONTEXT_MANIFEST.md").exists():
+            return candidate
+    return ""
+
+
+def doc_path(target: Path, rel_path: str, memory_dir: str = "") -> Path:
+    return (target / memory_dir / rel_path) if memory_dir else (target / rel_path)
+
+
+def strip_fenced_code(text: str) -> str:
+    return re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+
+
+def detect_profile(target: Path, memory_dir: str = "") -> str:
+    manifest = read_text(doc_path(target, "CONTEXT_MANIFEST.md", memory_dir))
+    match = re.search(r"(?im)^Profile:\s*(light|standard|research|academic)\s*$", manifest)
+    return match.group(1) if match else "standard"
+
+
 def latest_markdown_section(text: str, heading_pattern: str | None = None) -> str:
     """Return the first matching level-2 markdown section.
 
@@ -40,6 +100,7 @@ def latest_markdown_section(text: str, heading_pattern: str | None = None) -> st
     templates contain instructional sections first. `heading_pattern` lets us
     skip those and find actual dated or ID-based entries.
     """
+    text = strip_fenced_code(text)
     if not text.strip():
         return ""
 
@@ -51,10 +112,13 @@ def latest_markdown_section(text: str, heading_pattern: str | None = None) -> st
     chosen = headings[0]
     if heading_pattern:
         wanted = re.compile(heading_pattern)
+        chosen = None
         for heading in headings:
             if wanted.search(heading.group(0)):
                 chosen = heading
                 break
+        if chosen is None:
+            return ""
 
     start = chosen.start()
     following = [h for h in headings if h.start() > chosen.start()]
@@ -70,12 +134,20 @@ def excerpt(text: str, max_chars: int) -> str:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="replace")
+
     parser = argparse.ArgumentParser(description="Generate a rough handoff brief from memory docs.")
     parser.add_argument("target", help="Target project/workspace directory")
+    parser.add_argument("--profile", choices=PROFILE_CHOICES, help="Profile to use; defaults to CONTEXT_MANIFEST.md when available")
+    parser.add_argument("--memory-dir", help="Memory subdirectory to read; auto-detects memory/ or project-memory/ when omitted")
     parser.add_argument("--max-section-chars", type=int, default=2500)
     args = parser.parse_args()
 
     target = Path(args.target).expanduser().resolve()
+    memory_dir = detect_memory_dir(target, args.memory_dir)
+    profile = args.profile or detect_profile(target, memory_dir)
+    profile_files = set(load_profile(profile))
     project = target.name
     today = dt.date.today().isoformat()
 
@@ -84,28 +156,29 @@ def main() -> int:
     print("This is a generated draft. Review before sending to another human or model.")
     print("")
 
-    recovery = read_text(target / "RECOVERY_NOTES.md")
+    recovery = read_text(doc_path(target, "RECOVERY_NOTES.md", memory_dir))
     print("## Latest recovery checkpoint")
     print("")
     print(excerpt(latest_markdown_section(recovery, r"^##\s+\d{4}-\d{2}-\d{2}"), args.max_section_chars) if recovery else "Missing `RECOVERY_NOTES.md`.")
     print("")
 
-    for rel in ["HUMAN_BRIEF.md", "CURRENT_STATE.md", "ROADMAP.md"]:
-        text = read_text(target / rel)
+    for rel in [item for item in EXCERPT_ORDER if item in profile_files]:
+        text = read_text(doc_path(target, rel, memory_dir))
         print(f"## Excerpt: {rel}")
         print("")
         print(excerpt(text, args.max_section_chars) if text else f"Missing `{rel}`.")
         print("")
 
-    for rel in ["DECISION_LOG.md", "RESEARCH_LOG.md", "HYPOTHESIS_LAB.md"]:
-        text = read_text(target / rel)
+    for rel in [item for item in LATEST_SECTION_PATTERNS if item in profile_files]:
+        text = read_text(doc_path(target, rel, memory_dir))
         print(f"## Latest relevant section: {rel}")
         print("")
-        pattern = {"DECISION_LOG.md": r"^##\s+DEC-", "RESEARCH_LOG.md": r"^##\s+RES-", "HYPOTHESIS_LAB.md": r"^##\s+HYP-"}.get(rel)
-        print(excerpt(latest_markdown_section(text, pattern), args.max_section_chars) if text else f"Missing `{rel}`.")
+        pattern = LATEST_SECTION_PATTERNS.get(rel)
+        section = latest_markdown_section(text, pattern)
+        print(excerpt(section, args.max_section_chars) if section else ("No matching entries found." if text else f"Missing `{rel}`."))
         print("")
 
-    manifest = read_text(target / "CONTEXT_MANIFEST.md")
+    manifest = read_text(doc_path(target, "CONTEXT_MANIFEST.md", memory_dir))
     print("## Context manifest excerpt")
     print("")
     print(excerpt(manifest, args.max_section_chars) if manifest else "Missing `CONTEXT_MANIFEST.md`.")

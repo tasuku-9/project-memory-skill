@@ -403,7 +403,7 @@ Choose the mode that matches the user’s task.
 
 Use when the workspace has just been created and all canonical files are empty templates. See `tasks/init_session.md` for the full process.
 
-Detect init state: `CURRENT_STATE.md` contains only template placeholders, `RECOVERY_NOTES.md` has no dated entries, `HUMAN_BRIEF.md` has no summary.
+Detect init state: `CURRENT_STATE.md` contains only template placeholders, `RECOVERY_NOTES.md` has no project-specific checkpoint or only the generated initial checkpoint, and `HUMAN_BRIEF.md` has no project-specific summary.
 
 Before writing files, recommend and confirm the smallest sufficient profile and capture trigger strength.
 

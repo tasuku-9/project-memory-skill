@@ -25,39 +25,23 @@ Read only the files needed to understand and route the current work safely.
 Do not preemptively read the full memory set.
 For non-trivial work, briefly state which memory files will be read and which relevant files will not be read.
 
-1. `RECOVERY_NOTES.md` — latest resume checkpoint
-2. `HUMAN_BRIEF.md` — human-facing project orientation
-3. `CURRENT_STATE.md` — current truth
-4. `ROADMAP.md` — planned work
-5. `DECISION_LOG.md` — rationale and decision history
-6. `RESEARCH_LOG.md` — evidence, experiments, observations
-7. `HYPOTHESIS_LAB.md` — raw sparks and working hypotheses
-8. `DOCS_GUIDE.md` — routing rules
-9. `GLOSSARY.md` — terminology
+{{READ_FIRST}}
 
 ## Canonical sources
 
-| Question | Trust this first |
-| --- | --- |
-| What is true now? | `CURRENT_STATE.md` |
-| What should happen next? | `ROADMAP.md` and latest `RECOVERY_NOTES.md` |
-| Why was this choice made? | `DECISION_LOG.md` |
-| What evidence or experiment supports this? | `RESEARCH_LOG.md` |
-| What is speculative? | `HYPOTHESIS_LAB.md` |
-| What should a human read quickly? | `HUMAN_BRIEF.md` |
-| Where should new information be written? | `DOCS_GUIDE.md` |
+{{CANONICAL_SOURCES}}
+
+## Canonical locations
+
+Memory root: `{{MEMORY_ROOT}}`
+
+{{CANONICAL_LOCATIONS}}
 
 ## Conflict handling
 
 If files disagree:
 
-1. Prefer `CURRENT_STATE.md` for current truth.
-2. Prefer the latest relevant dated `DECISION_LOG.md` entry for rationale.
-3. Prefer the latest relevant dated `RESEARCH_LOG.md` entry for evidence.
-4. Treat `ROADMAP.md` as intent, not proof.
-5. Treat `HYPOTHESIS_LAB.md` as unverified by default.
-6. Treat `RECOVERY_NOTES.md` as the resume pointer, not the full source of truth.
-7. Report the conflict before merging claims.
+{{CONFLICT_HANDLING}}
 
 ## Ignore unless specifically requested
 
@@ -108,7 +92,7 @@ Update this file when:
 
 ## Workspace profile
 
-Profile: research
+Profile: {{PROFILE}}
 
 Change to `light`, `standard`, `research`, or `academic` as needed.
 
@@ -117,7 +101,7 @@ Change to `light`, `standard`, `research`, or `academic` as needed.
 project-memory is a skeleton.
 Customize these policies to fit the project:
 
-- Capture trigger strength: standard (light, standard, research, or academic)
+- Capture trigger strength: {{CAPTURE_TRIGGER}} (light, standard, research, or academic)
 - Review cadence:
 - Archive policy:
 - Tool-facing instructions:

@@ -29,23 +29,6 @@ Do not use this file for final current truth. Promote supported conclusions into
 - human_brief_reason:
 ```
 
-## RES-{{DATE}}-001 - Initial research log
+## Research entries
 
-- date: {{DATE}}
-- question: What needs to be preserved so research continuity survives chat loss or model migration?
-- hypothesis / expectation: Separating hypotheses, evidence, decisions, and current truth will reduce accidental overclaiming.
-- method: Initialize a structured research memory workspace.
-- inputs / sources: Continuity memory template.
-- result: Research logging is available as a canonical evidence layer.
-- interpretation: Future research entries should capture method, result, interpretation, confidence, and limitations.
-- confidence: medium
-- limitations: This is a process setup entry, not a domain research result.
-- changed my mind about: None yet.
-- next test: Use the log during a real research session and check whether it prevents context drift.
-- related hypotheses:
-  - `HYPOTHESIS_LAB.md`
-- related decisions:
-  - `DECISION_LOG.md`
-- should update current state?: no
-- human_brief_update: no
-- human_brief_reason: No immediate human-facing change beyond workspace setup.
+Add the first project-specific research entry when an experiment, investigation, observation, source check, or failed attempt teaches something worth preserving.
