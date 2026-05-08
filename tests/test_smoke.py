@@ -360,6 +360,21 @@ class SmokeTests(unittest.TestCase):
         self.assertIn("## Excerpt: LITERATURE_NOTES.md", result.stdout)
         self.assertIn("## Excerpt: FIGURES_LOG.md", result.stdout)
 
+    def test_academic_figures_log_records_asset_paths(self) -> None:
+        workspace = self.make_workspace("academic-figures-policy-workspace")
+        run_script(
+            str(SCRIPTS_DIR / "init_memory_workspace.py"),
+            str(workspace),
+            "--profile",
+            "academic",
+        )
+        manifest = (workspace / "CONTEXT_MANIFEST.md").read_text(encoding="utf-8")
+        figures_log = (workspace / "FIGURES_LOG.md").read_text(encoding="utf-8")
+        self.assertIn("Figure asset directory: figures/", manifest)
+        self.assertIn("## Asset storage rule", figures_log)
+        self.assertIn("**Asset path**", figures_log)
+        self.assertIn("figures/FIG-001.png", figures_log)
+
     def test_light_handoff_uses_logbook_without_missing_heavy_docs(self) -> None:
         workspace = self.make_workspace("light-handoff-workspace")
         run_script(

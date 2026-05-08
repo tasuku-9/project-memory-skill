@@ -324,10 +324,15 @@ This file is used in the `academic` profile. If the profile is `research` or low
 ### Write to `FIGURES_LOG.md` when
 
 - a figure, chart, diagram, or table is produced
+- a photo, screenshot, generated image, or external visual asset becomes part of the project
 - a visualization is updated or superseded
 - the data source, generation method, or intended use of a visual output should be traceable
 
-Each entry should link the visual to its data source and generation method so it can be reproduced during peer review or revision.
+When a visual file exists or is generated, save a durable copy under the project's figure asset directory before relying on it. The default directory is `figures/` unless `CONTEXT_MANIFEST.md` declares another path.
+
+Use stable figure IDs for filenames, such as `figures/FIG-001.png`, `figures/FIG-001-source.png`, or `figures/FIG-001-final.svg`.
+
+Each entry should link the visual asset path to its data source and generation method so it can be found, reproduced, or revised during peer review.
 
 This file is used in the `academic` profile. If the profile is `research` or lower and this file does not exist, do not create it unless the user is managing visual outputs for a publication.
 

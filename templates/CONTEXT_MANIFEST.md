@@ -102,6 +102,7 @@ project-memory is a skeleton.
 Customize these policies to fit the project:
 
 - Capture trigger strength: {{CAPTURE_TRIGGER}} (light, standard, research, or academic)
+- Figure asset directory: figures/
 - Review cadence:
 - Archive policy:
 - Tool-facing instructions:

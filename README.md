@@ -177,7 +177,7 @@ For managing a research paper, thesis, or publication. Includes everything in Re
 - `LITERATURE_NOTES.md` — prior work and its relevance to your research
 - `FIGURES_LOG.md` — every figure and table linked to its data source and generation method
 
-The academic profile connects literature to hypotheses, tracks which findings support or challenge your claims, and ensures every figure is reproducible. The promotion rules enforce that only evidence-backed claims enter your results.
+The academic profile connects literature to hypotheses, tracks which findings support or challenge your claims, and ensures every figure is saved and reproducible. By default, durable visual assets are saved under `figures/` and linked from `FIGURES_LOG.md`. The promotion rules enforce that only evidence-backed claims enter your results.
 
 ## Agent integration
 
