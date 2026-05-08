@@ -8,9 +8,9 @@ A workspace is in init state when all of the following are true:
 
 - `CURRENT_STATE.md` contains only the template placeholders (no project-specific content)
 - `RECOVERY_NOTES.md` has no project-specific checkpoint, or only the generated initial checkpoint
-- `HUMAN_BRIEF.md` has no one-paragraph summary
+- `HUMAN_BRIEF.md` has no one-paragraph summary, when that file exists
 
-If any of these files contain real content, this is not an init session. Use `resume_work.md` instead.
+If any of the selected profile's init files contain real content, this is not an init session. Use `resume_work.md` instead.
 
 ## Process
 
@@ -27,14 +27,14 @@ If any of these files contain real content, this is not an init session. Use `re
    - **What is the immediate goal?** What should happen next.
    - **What constraints or decisions already exist?** Known rules, chosen tools, rejected approaches, or anything the agent should not re-evaluate.
 5. Do not ask more than these four unless profile, capture trigger strength, or canonical documentation language is unclear. In those cases, ask one concise confirmation and record the answer in `CONTEXT_MANIFEST.md` or `DOCS_GUIDE.md`. Start with minimal viable memory and let it grow through use.
-6. Write the answers into canonical files in this order:
+6. Write the answers into canonical files in this order, only when the selected profile includes the file:
    - `CURRENT_STATE.md` - project purpose, current stage, known constraints
    - `ROADMAP.md` - immediate goal as the first NOW item, any mentioned future work as NEXT or LATER
    - `DECISION_LOG.md` - any decisions or rejected alternatives the user mentioned
    - `HUMAN_BRIEF.md` - one-paragraph summary, current goal, main blocker if known
    - `RECOVERY_NOTES.md` - first checkpoint with today's date
    - `CONTEXT_MANIFEST.md` - update the profile, capture trigger strength, last-updated date, and documentation language if it was confirmed
-7. Leave `RESEARCH_LOG.md`, `HYPOTHESIS_LAB.md`, and `GLOSSARY.md` empty until content naturally arises. Do not fill them with placeholders.
+7. Leave supporting files such as `RESEARCH_LOG.md`, `HYPOTHESIS_LAB.md`, and `GLOSSARY.md` empty until content naturally arises, if the selected profile includes them. Do not fill them with placeholders.
 8. Return a summary of what was written and where.
 
 ## Response structure
@@ -60,8 +60,11 @@ If any of these files contain real content, this is not an init session. Use `re
 | `DECISION_LOG.md` | ... |
 | `HUMAN_BRIEF.md` | ... |
 | `RECOVERY_NOTES.md` | ... |
+| `CONTEXT_MANIFEST.md` | ... |
 
 ### Left empty (will populate during work)
+
+Only list files that exist in the selected profile.
 
 - `RESEARCH_LOG.md`
 - `HYPOTHESIS_LAB.md`

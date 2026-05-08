@@ -40,7 +40,7 @@ Map existing information into canonical files. Use this classification:
 | --- | --- |
 | "We are using X", "The system does Y", current architecture | `CURRENT_STATE.md` |
 | "We chose X over Y because Z", ADRs, rejected approaches | `DECISION_LOG.md` |
-| "We tested X and found Y", benchmarks, experiments | `RESEARCH_LOG.md` |
+| "We tested X and found Y", benchmarks, experiments | `RESEARCH_LOG.md` when present; otherwise `DECISION_LOG.md` if it changed direction |
 | "We should try X", "maybe X would work", open questions | `HYPOTHESIS_LAB.md` |
 | Planned features, milestones, TODO lists, backlog | `ROADMAP.md` |
 | Blockers, risks, current priority | `HUMAN_BRIEF.md` |
@@ -56,12 +56,12 @@ If a project-memory template path collides with an existing file, choose a non-c
 Record the chosen canonical locations in `CONTEXT_MANIFEST.md`.
 The init script can do this safely with `--memory-dir memory`; when it detects same-name files and no explicit memory directory is given, it writes the generated memory workspace under `memory/` by default.
 
-Write these roles in this order, using the chosen canonical locations:
+Write these roles in this order, using the chosen canonical locations and only when the selected profile includes the file:
 
 1. `CURRENT_STATE.md` - extract confirmed truths from README and existing docs
 2. `DECISION_LOG.md` - extract past decisions with rationale. If rationale is missing, record the decision and mark rationale as `unknown - predates project-memory`
 3. `ROADMAP.md` - extract plans, TODOs, and known blockers
-4. `RESEARCH_LOG.md` - extract any documented experiments or test results
+4. `RESEARCH_LOG.md` - extract any documented experiments or test results when present
 5. `HYPOTHESIS_LAB.md` - extract unverified ideas and open questions
 6. `HUMAN_BRIEF.md` - write a fresh summary based on what was classified
 7. `RECOVERY_NOTES.md` - first checkpoint
@@ -117,7 +117,7 @@ If the project already uses `AGENTS.md`, `CLAUDE.md`, or similar tool-facing fil
 | `CURRENT_STATE.md` | ... | README, user |
 | `DECISION_LOG.md` | ... | README, git log |
 | `ROADMAP.md` | ... | README |
-| `RESEARCH_LOG.md` | ... | docs/ |
+| `RESEARCH_LOG.md` | ... | docs/ when present |
 | `HYPOTHESIS_LAB.md` | ... | user |
 | `HUMAN_BRIEF.md` | ... | synthesized |
 

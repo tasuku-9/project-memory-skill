@@ -7,9 +7,9 @@ Use this when a user wants to continue after chat loss, a long pause, or model m
 1. Read `CONTEXT_MANIFEST.md` if present.
 2. Identify which memory files are relevant to the current resume task; do not preemptively read the full memory set.
 3. Read the latest checkpoint in `RECOVERY_NOTES.md` when relevant.
-4. Read `HUMAN_BRIEF.md` for orientation when relevant.
+4. Read `HUMAN_BRIEF.md` for orientation when present and relevant; in the light profile, use `LOGBOOK.md` for compact history when relevant.
 5. Read `CURRENT_STATE.md` before trusting old claims when relevant.
-6. Read only the relevant parts of `ROADMAP.md`, `DECISION_LOG.md`, `RESEARCH_LOG.md`, and `HYPOTHESIS_LAB.md`.
+6. Read only the relevant parts of `ROADMAP.md`, `DECISION_LOG.md`, `RESEARCH_LOG.md`, `HYPOTHESIS_LAB.md`, or `LOGBOOK.md` when those files exist.
 7. Identify conflicts instead of smoothing them over.
 8. Return a compact restart plan.
 

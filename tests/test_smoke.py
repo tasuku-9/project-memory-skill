@@ -134,6 +134,11 @@ class SmokeTests(unittest.TestCase):
                 manifest = (workspace / "CONTEXT_MANIFEST.md").read_text(encoding="utf-8")
                 self.assertIn(f"Profile: {profile}", manifest)
                 self.assertIn(f"Capture trigger strength: {profile}", manifest)
+                self.assertIn("Capture trigger meanings:", manifest)
+                self.assertIn("| `light` | Record only explicit requests", manifest)
+                self.assertIn("| `standard` | Record topic-boundary decisions", manifest)
+                self.assertIn("| `research` | Also record hypotheses", manifest)
+                self.assertIn("| `academic` | Also record literature", manifest)
 
     def test_audit_defaults_to_manifest_profile(self) -> None:
         workspace = self.make_workspace("audit-manifest-profile-workspace")

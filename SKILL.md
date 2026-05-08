@@ -150,10 +150,11 @@ Route information by status:
 | Confirmed current state | `CURRENT_STATE.md` |
 | Future intended work | `ROADMAP.md` |
 | Decisions and rationale | `DECISION_LOG.md` |
-| Research observations, experiments, evidence, results | `RESEARCH_LOG.md` |
+| Research observations, experiments, evidence, results | `RESEARCH_LOG.md` when present; otherwise route direction-changing findings to `DECISION_LOG.md` and speculative observations to `HYPOTHESIS_LAB.md` |
 | Unverified ideas and speculative explanations | `HYPOTHESIS_LAB.md` |
-| Human-facing orientation summary | `HUMAN_BRIEF.md` |
+| Human-facing orientation summary | `HUMAN_BRIEF.md` when present |
 | Fast session resume checkpoint | `RECOVERY_NOTES.md` |
+| Compact combined history for the light profile | `LOGBOOK.md` |
 | Prior work, references, and their relevance (academic profile) | `LITERATURE_NOTES.md` |
 | Figures, tables, and visual outputs (academic profile) | `FIGURES_LOG.md` |
 | File roles, read order, ignore rules | `CONTEXT_MANIFEST.md` and `DOCS_GUIDE.md` |
@@ -173,9 +174,10 @@ Use:
 - `CURRENT_STATE.md` for current trusted assumptions
 - `ROADMAP.md` for future intended work
 - `DECISION_LOG.md` for adopted, rejected, or deferred decisions
-- `RESEARCH_LOG.md` for tests, investigation, observations, and evidence
+- `RESEARCH_LOG.md` for tests, investigation, observations, and evidence when the selected profile includes it
 - `HYPOTHESIS_LAB.md` for unverified ideas and emerging hypotheses
-- `HUMAN_BRIEF.md` for fast human orientation
+- `HUMAN_BRIEF.md` for fast human orientation when the selected profile includes it
+- `LOGBOOK.md` for compact combined decisions, observations, hypotheses, and notes in the light profile
 - `RECOVERY_NOTES.md` for restart checkpoints
 
 If the repository also uses `AGENTS.md`, `CLAUDE.md`, or similar tool-facing guidance, keep those files short and point them to these canonical docs instead of duplicating project memory there.
@@ -189,11 +191,11 @@ Read only as far as needed to route the current task safely.
 
 1. `CONTEXT_MANIFEST.md`
 2. latest entry in `RECOVERY_NOTES.md`
-3. `HUMAN_BRIEF.md`
+3. `HUMAN_BRIEF.md` when present, or `LOGBOOK.md` in the light profile
 4. `CURRENT_STATE.md`
 5. `ROADMAP.md`
 6. latest relevant entries in `DECISION_LOG.md`
-7. latest relevant entries in `RESEARCH_LOG.md`
+7. latest relevant entries in `RESEARCH_LOG.md` when present
 8. `HYPOTHESIS_LAB.md`
 9. `DOCS_GUIDE.md` when routing or updating docs is unclear
 
@@ -222,7 +224,7 @@ When updating memory, first classify the new material.
 - a prior truth has changed or been retired
 - future readers should rely on it without reconstructing history
 
-Do not place untested claims here. If the claim is inferred but not verified, put it in `HYPOTHESIS_LAB.md` or `RESEARCH_LOG.md` with uncertainty.
+Do not place untested claims here. If the claim is inferred but not verified, put it in `HYPOTHESIS_LAB.md`, or in `RESEARCH_LOG.md` with uncertainty when that file exists.
 
 ### Write to `ROADMAP.md` when
 
@@ -241,13 +243,15 @@ A roadmap item is intent, not proof.
 
 Each decision should include context, alternatives, rationale, risks, and revisit conditions.
 
-### Write to `RESEARCH_LOG.md` when
+### Write to `RESEARCH_LOG.md` when present
 
 - an experiment, investigation, test, literature review, source check, or observation happened
 - evidence changed confidence in a hypothesis
 - a null result or failed attempt matters
 
 Keep methods, inputs, results, interpretation, confidence, and limitations together.
+
+If `RESEARCH_LOG.md` is not in the selected profile, record direction-changing findings in `DECISION_LOG.md` and keep still-speculative observations in `HYPOTHESIS_LAB.md`.
 
 ### Write to `HYPOTHESIS_LAB.md` when
 
@@ -296,7 +300,7 @@ Review `HUMAN_BRIEF.md` when any of the following occur, and update it only if t
 - a `DECISION_LOG.md` entry changes direction, priority, risk, tracked threads, or required human decisions
 - a blocker is added, removed, or reprioritized in `ROADMAP.md`
 - a hypothesis is promoted to `CURRENT_STATE.md`
-- a `RESEARCH_LOG.md` entry changes confidence in a key assumption
+- a `RESEARCH_LOG.md` entry changes confidence in a key assumption, when that file exists
 - a `RECOVERY_NOTES.md` checkpoint changes the current goal, main blocker, next decision, or tracked thread status
 - two or more parallel threads are active or paused and a human needs the current split
 
@@ -343,11 +347,11 @@ Use this priority order for current-state questions:
 
 1. explicit latest entry in `CURRENT_STATE.md`
 2. latest relevant dated entry in `DECISION_LOG.md`
-3. latest relevant dated entry in `RESEARCH_LOG.md`
+3. latest relevant dated entry in `RESEARCH_LOG.md`, when present
 4. latest entry in `RECOVERY_NOTES.md`
-5. `HUMAN_BRIEF.md`
-6. `ROADMAP.md`
-7. `HYPOTHESIS_LAB.md`
+5. `HUMAN_BRIEF.md` when present
+6. `ROADMAP.md` when present
+7. `HYPOTHESIS_LAB.md` when present, or `LOGBOOK.md` in the light profile
 
 Then report the conflict and propose a patch.
 
@@ -355,9 +359,10 @@ Important distinctions:
 
 - `CURRENT_STATE.md` describes what is true now.
 - `DECISION_LOG.md` explains why a choice was made.
-- `RESEARCH_LOG.md` records evidence and interpretation.
+- `RESEARCH_LOG.md` records evidence and interpretation in research-oriented profiles.
 - `ROADMAP.md` says what is planned.
 - `HYPOTHESIS_LAB.md` is never truth by itself.
+- `LOGBOOK.md` carries lightweight history in the light profile.
 - `RECOVERY_NOTES.md` tells where to resume but is not the full source of truth.
 
 ## Promotion rules
@@ -366,8 +371,9 @@ Do not promote anything directly from `HYPOTHESIS_LAB.md` to `CURRENT_STATE.md`.
 
 Promotion to `CURRENT_STATE.md` requires at least one of:
 
-- evidence, observation, comparison, or test results recorded in `RESEARCH_LOG.md`
+- evidence, observation, comparison, or test results recorded in `RESEARCH_LOG.md` when present
 - an explicit operating decision recorded in `DECISION_LOG.md`
+- a direction-changing finding recorded in `DECISION_LOG.md` when the selected profile does not include `RESEARCH_LOG.md`
 - a clearly stated user decision
 - a cited external source when the claim depends on external facts
 
@@ -403,11 +409,11 @@ Choose the mode that matches the user’s task.
 
 Use when the workspace has just been created and all canonical files are empty templates. See `tasks/init_session.md` for the full process.
 
-Detect init state: `CURRENT_STATE.md` contains only template placeholders, `RECOVERY_NOTES.md` has no project-specific checkpoint or only the generated initial checkpoint, and `HUMAN_BRIEF.md` has no project-specific summary.
+Detect init state: `CURRENT_STATE.md` contains only template placeholders, `RECOVERY_NOTES.md` has no project-specific checkpoint or only the generated initial checkpoint, and `HUMAN_BRIEF.md` has no project-specific summary when that file exists.
 
 Before writing files, recommend and confirm the smallest sufficient profile and capture trigger strength.
 
-Ask four questions: project purpose, current stage, immediate goal, known constraints or decisions. Write answers into `CURRENT_STATE.md`, `ROADMAP.md`, `DECISION_LOG.md`, `HUMAN_BRIEF.md`, and `RECOVERY_NOTES.md`. Leave other files empty until content arises naturally.
+Ask four questions: project purpose, current stage, immediate goal, known constraints or decisions. Write answers into the canonical files present for the selected profile: always `CURRENT_STATE.md` and `RECOVERY_NOTES.md`; also `ROADMAP.md`, `DECISION_LOG.md`, and `HUMAN_BRIEF.md` when present. Leave other files empty until content arises naturally.
 
 Return a summary of what was written and where.
 
@@ -448,7 +454,7 @@ Return:
 - current goal
 - last completed work
 - key decisions and rationale
-- recent research evidence
+- recent evidence or research findings, when present
 - active hypotheses
 - next work
 - risks and unresolved questions
@@ -462,7 +468,7 @@ Evaluate:
 - missing canonical files
 - overloaded README risk
 - speculative language in `CURRENT_STATE.md`
-- stale `HUMAN_BRIEF.md`
+- stale `HUMAN_BRIEF.md` when present
 - missing ignore rules
 - likely duplication or unclear ownership between files
 
@@ -473,8 +479,8 @@ At meaningful stopping points, the AI should:
 1. update `RECOVERY_NOTES.md`
 2. route any new ideas into `HYPOTHESIS_LAB.md`
 3. record decisions in `DECISION_LOG.md` if a decision was made
-4. record evidence in `RESEARCH_LOG.md` if research or testing occurred
+4. record evidence in `RESEARCH_LOG.md` if that file exists and research or testing occurred; otherwise record direction-changing findings in `DECISION_LOG.md`
 5. review whether `CURRENT_STATE.md` changed
-6. review whether `HUMAN_BRIEF.md` needs refresh
+6. review whether `HUMAN_BRIEF.md` needs refresh when present
 
 Do not duplicate the same content across files unless a short summary is necessary for navigation.
