@@ -103,6 +103,7 @@ Customize these policies to fit the project:
 
 - Capture trigger strength: {{CAPTURE_TRIGGER}} (light, standard, research, or academic)
 - Figure asset directory: figures/
+- Incoming visual asset directory: figures/inbox/
 - Review cadence:
 - Archive policy:
 - Tool-facing instructions:

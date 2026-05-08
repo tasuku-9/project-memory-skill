@@ -371,9 +371,13 @@ class SmokeTests(unittest.TestCase):
         manifest = (workspace / "CONTEXT_MANIFEST.md").read_text(encoding="utf-8")
         figures_log = (workspace / "FIGURES_LOG.md").read_text(encoding="utf-8")
         self.assertIn("Figure asset directory: figures/", manifest)
+        self.assertIn("Incoming visual asset directory: figures/inbox/", manifest)
         self.assertIn("## Asset storage rule", figures_log)
-        self.assertIn("**Asset path**", figures_log)
+        self.assertIn("**Asset path(s)**", figures_log)
+        self.assertIn("**Original source**", figures_log)
+        self.assertIn("**Received / created**", figures_log)
         self.assertIn("figures/FIG-001.png", figures_log)
+        self.assertIn("figures/inbox/IMG-", figures_log)
 
     def test_light_handoff_uses_logbook_without_missing_heavy_docs(self) -> None:
         workspace = self.make_workspace("light-handoff-workspace")

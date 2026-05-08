@@ -324,15 +324,16 @@ This file is used in the `academic` profile. If the profile is `research` or low
 ### Write to `FIGURES_LOG.md` when
 
 - a figure, chart, diagram, or table is produced
+- the user provides a photo, screenshot, figure, diagram, generated image, or other visual asset that may matter later
 - a photo, screenshot, generated image, or external visual asset becomes part of the project
 - a visualization is updated or superseded
 - the data source, generation method, or intended use of a visual output should be traceable
 
-When a visual file exists or is generated, save a durable copy under the project's figure asset directory before relying on it. The default directory is `figures/` unless `CONTEXT_MANIFEST.md` declares another path.
+When a visual file exists, is generated, or is provided by the user, save a durable copy under the project's figure asset directory before relying on it. The default directory is `figures/` unless `CONTEXT_MANIFEST.md` declares another path.
 
-Use stable figure IDs for filenames, such as `figures/FIG-001.png`, `figures/FIG-001-source.png`, or `figures/FIG-001-final.svg`.
+Use stable figure IDs for filenames, such as `figures/FIG-001.png`, `figures/FIG-001-source.png`, or `figures/FIG-001-final.svg`. If the asset is not yet a formal figure, save it under `figures/inbox/`, for example `figures/inbox/IMG-YYYY-MM-DD-001.png`, and promote or link it to a `FIG-xxx` path later.
 
-Each entry should link the visual asset path to its data source and generation method so it can be found, reproduced, or revised during peer review.
+Each entry should link the visual asset path to its original source, data source, and generation method so it can be found, reproduced, or revised during peer review. Preserve the original supplied image when a processed, cropped, annotated, or regenerated version is created.
 
 This file is used in the `academic` profile. If the profile is `research` or lower and this file does not exist, do not create it unless the user is managing visual outputs for a publication.
 
