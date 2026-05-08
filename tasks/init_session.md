@@ -19,7 +19,7 @@ If any of the selected profile's init files contain real content, this is not an
    - `light`: small personal project, short-lived work, or minimal continuity
    - `standard`: normal coding, writing, or product work with decisions and next actions
    - `research`: experiments, evidence, hypotheses, repeated investigation, or debugging loops
-   - `academic`: literature, figures, tables, thesis, paper, or publication workflow
+   - `academic`: literature, figures, tables, thesis, paper, provenance, or publication-grade traceability workflow
 3. Explain that project-memory is a skeleton. The project may customize profile, capture trigger strength, review cadence, archive policy, and tool-facing instructions.
 4. Ask the user four things:
    - **What is this project?** One-sentence purpose.

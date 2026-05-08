@@ -115,6 +115,6 @@ Capture trigger meanings:
 | `light` | Record only explicit requests, session-end checkpoints, and major decisions. |
 | `standard` | Record topic-boundary decisions, next actions, blockers, and direction changes. |
 | `research` | Also record hypotheses, observations, failed attempts, and evidence changes. |
-| `academic` | Also record literature, methods, figures, tables, and publication-facing traceability. |
+| `academic` | Also record literature, methods, figures, tables, visual assets, provenance, and publication-grade traceability. |
 
 Use the lightest policy that preserves the project's real continuity needs.

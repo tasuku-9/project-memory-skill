@@ -67,7 +67,7 @@ When adopting an existing project, do not overwrite existing same-name files; pl
 | Small personal project or minimal continuity | `light` |
 | Long-running product, coding, writing, or planning | `standard` |
 | Debugging, experiments, product discovery, or repeated investigation | `research` |
-| Paper, thesis, literature review, figures, or publication workflow | `academic` |
+| Paper, thesis, literature review, figures, provenance, or publication-grade traceability | `academic` |
 
 ## Quick start
 
@@ -170,14 +170,14 @@ For research, experiments, literature review, product discovery, or exploratory 
 - Stronger promotion rules from hypothesis to confirmed truth
 - Evidence and confidence fields
 
-### Academic
+### Academic / Publication-Grade Traceability
 
-For managing a research paper, thesis, or publication. Includes everything in Research plus:
+For managing a research paper, thesis, publication, or any complex project that needs literature, figures, visual assets, provenance, and publication-grade traceability. Includes everything in Research plus:
 
 - `LITERATURE_NOTES.md` — prior work and its relevance to your research
 - `FIGURES_LOG.md` — every figure and table linked to its data source and generation method
 
-The academic profile connects literature to hypotheses, tracks which findings support or challenge your claims, and ensures every figure is saved and reproducible. By default, durable visual assets, including user-provided images and screenshots, are saved under `figures/` and linked from `FIGURES_LOG.md`. The promotion rules enforce that only evidence-backed claims enter your results.
+The academic / publication-grade profile connects literature to hypotheses, tracks which findings support or challenge your claims, and ensures every figure is saved and reproducible. By default, durable visual assets, including user-provided images and screenshots, are saved under `figures/` and linked from `FIGURES_LOG.md`. The promotion rules enforce that only evidence-backed claims enter your results.
 
 ## Agent integration
 

@@ -24,7 +24,7 @@ A project is in adopt state when:
    - `light`: small personal project, short-lived work, or minimal continuity
    - `standard`: normal coding, writing, or product work with decisions and next actions
    - `research`: experiments, evidence, hypotheses, repeated investigation, or debugging loops
-   - `academic`: literature, figures, tables, thesis, paper, or publication workflow
+   - `academic`: literature, figures, tables, thesis, paper, provenance, or publication-grade traceability workflow
 7. Ask the user:
    - **What is this project and where is it now?**
    - **Is there anything not in the files that I should know?** Decisions made in chat, rejected approaches, unwritten rules.

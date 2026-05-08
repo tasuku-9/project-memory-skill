@@ -13,7 +13,8 @@ description: >
   Trigger phrases: resume work, context lost, switch model, handoff brief,
   update project docs, classify decisions, audit memory, migrate context,
   log experiment, track hypothesis, what did we decide, why did we choose,
-  manage paper, track literature, log figures, thesis management.
+  manage paper, track literature, log figures, thesis management,
+  publication-grade traceability.
 compatibility: "Designed for Claude Code and Codex CLI. Expected to work with Gemini CLI, Cursor, and other agents supporting the Agent Skills standard."
 license: MIT
 metadata:
@@ -40,7 +41,7 @@ Use this skill when the user asks to:
 - produce a handoff brief for a human or another model
 - distinguish confirmed facts from hypotheses, plans, and unresolved questions
 - audit whether a project has enough continuity documentation
-- manage a research paper or thesis: track literature, connect findings to hypotheses, log figures and tables with their data sources
+- manage a research paper, thesis, publication, or traceability-heavy project: track literature, connect findings to hypotheses, log figures and tables with their data sources
 
 Do not use this skill as a replacement for domain expertise, citations, or source verification. It is a continuity and documentation-routing skill.
 
@@ -121,14 +122,14 @@ When initializing an empty workspace or adopting an existing project, recommend 
 - `light`: small personal project, short-lived work, or minimal continuity
 - `standard`: normal coding, writing, or product work with decisions and next actions
 - `research`: experiments, evidence, hypotheses, repeated investigation, or debugging loops
-- `academic`: literature, figures, tables, thesis, paper, or publication workflow
+- `academic`: literature, figures, tables, thesis, paper, provenance, or publication-grade traceability workflow
 
 Recommend a capture trigger strength alongside the profile:
 
 - `light`: record only explicit requests, session-end checkpoints, and major decisions
 - `standard`: record topic-boundary decisions, next actions, blockers, and direction changes
 - `research`: also record hypotheses, observations, failed attempts, and evidence changes
-- `academic`: also record literature, methods, figures, tables, and publication-facing traceability
+- `academic`: also record literature, methods, figures, tables, visual assets, provenance, and publication-grade traceability
 
 Do not default to the largest profile or strongest capture trigger just to be safe.
 Use the lightest setup that preserves the project's real continuity needs.

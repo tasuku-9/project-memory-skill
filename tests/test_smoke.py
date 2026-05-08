@@ -138,7 +138,7 @@ class SmokeTests(unittest.TestCase):
                 self.assertIn("| `light` | Record only explicit requests", manifest)
                 self.assertIn("| `standard` | Record topic-boundary decisions", manifest)
                 self.assertIn("| `research` | Also record hypotheses", manifest)
-                self.assertIn("| `academic` | Also record literature", manifest)
+                self.assertIn("| `academic` | Also record literature, methods, figures, tables, visual assets, provenance, and publication-grade traceability.", manifest)
 
     def test_audit_defaults_to_manifest_profile(self) -> None:
         workspace = self.make_workspace("audit-manifest-profile-workspace")
