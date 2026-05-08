@@ -77,6 +77,13 @@ class SmokeTests(unittest.TestCase):
                 for rel_path in load_profile(profile_path.stem):
                     self.assertTrue((ROOT / "templates" / rel_path).exists(), rel_path)
 
+    def test_standard_and_research_file_sets_match_documented_contract(self) -> None:
+        standard = load_profile("standard")
+        research = load_profile("research")
+        self.assertNotIn("RESEARCH_LOG.md", standard)
+        self.assertIn("RESEARCH_LOG.md", research)
+        self.assertEqual(sorted([*standard, "RESEARCH_LOG.md"]), sorted(research))
+
     def test_init_and_audit_succeed_for_every_profile(self) -> None:
         for profile_path in sorted(PROFILES_DIR.glob("*.txt")):
             profile = profile_path.stem
@@ -95,6 +102,9 @@ class SmokeTests(unittest.TestCase):
                     if path.is_file()
                 )
                 self.assertEqual(expected_files, actual_files)
+                for path in workspace.rglob("*"):
+                    if path.is_file() and path.suffix in {".md", ".txt"}:
+                        self.assertNotIn("{{", path.read_text(encoding="utf-8"), f"unrendered placeholder in {path.name}")
                 self.assertIn(f"Profile: {profile}", init_result.stdout)
                 if profile == "light":
                     self.assertNotIn("HUMAN_BRIEF.md", init_result.stdout)
@@ -161,20 +171,52 @@ class SmokeTests(unittest.TestCase):
         self.assertNotEqual(0, result.returncode)
         self.assertIn("Invalid --date value", result.stderr + result.stdout)
 
-    def test_light_profile_docs_do_not_reference_missing_memory_files(self) -> None:
-        workspace = self.make_workspace("light-reference-workspace")
-        run_script(
+    def test_init_dry_run_writes_nothing(self) -> None:
+        workspace = self.make_workspace("dry-run-workspace")
+        result = run_script(
             str(SCRIPTS_DIR / "init_memory_workspace.py"),
             str(workspace),
             "--profile",
-            "light",
+            "standard",
+            "--dry-run",
         )
-        existing = {path.name for path in workspace.iterdir() if path.is_file()}
+        self.assertIn("would-write", result.stdout)
+        self.assertEqual([], list(workspace.iterdir()))
+
+    def test_init_rejects_unsafe_memory_dir(self) -> None:
+        workspace = self.make_workspace("unsafe-memory-dir-workspace")
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPTS_DIR / "init_memory_workspace.py"),
+                str(workspace),
+                "--memory-dir",
+                "../outside",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("--memory-dir must be a relative directory", result.stderr + result.stdout)
+
+    def test_generated_docs_do_not_reference_missing_memory_files(self) -> None:
         optional_tool_files = {"AGENTS.md", "CLAUDE.md"}
-        for path in sorted(workspace.glob("*.md")):
-            refs = set(re.findall(r"`([^`]+\.md)`", path.read_text(encoding="utf-8")))
-            missing = sorted(ref for ref in refs if ref not in existing and ref not in optional_tool_files)
-            self.assertEqual([], missing, f"{path.name} references missing memory files")
+        for profile_path in sorted(PROFILES_DIR.glob("*.txt")):
+            profile = profile_path.stem
+            with self.subTest(profile=profile):
+                workspace = self.make_workspace(f"{profile}-reference-workspace")
+                run_script(
+                    str(SCRIPTS_DIR / "init_memory_workspace.py"),
+                    str(workspace),
+                    "--profile",
+                    profile,
+                )
+                existing = {path.name for path in workspace.iterdir() if path.is_file()}
+                for path in sorted(workspace.glob("*.md")):
+                    refs = set(re.findall(r"`([^`]+\.md)`", path.read_text(encoding="utf-8")))
+                    missing = sorted(ref for ref in refs if ref not in existing and ref not in optional_tool_files)
+                    self.assertEqual([], missing, f"{profile}/{path.name} references missing memory files")
 
     def test_init_auto_routes_to_memory_dir_on_collision(self) -> None:
         workspace = self.make_workspace("collision-auto-memory-workspace")
@@ -205,7 +247,7 @@ class SmokeTests(unittest.TestCase):
         workspace = self.make_workspace("collision-explicit-root-workspace")
         (workspace / "README.md").write_text("# Existing README\n", encoding="utf-8")
         (workspace / "ROADMAP.md").write_text("# Existing Roadmap\n", encoding="utf-8")
-        run_script(
+        init_result = run_script(
             str(SCRIPTS_DIR / "init_memory_workspace.py"),
             str(workspace),
             "--profile",
@@ -213,6 +255,7 @@ class SmokeTests(unittest.TestCase):
             "--memory-dir",
             ".",
         )
+        self.assertIn("WARNING: Existing root files detected", init_result.stdout)
         audit_result = run_script(
             str(SCRIPTS_DIR / "audit_memory_workspace.py"),
             str(workspace),
@@ -240,6 +283,39 @@ class SmokeTests(unittest.TestCase):
         )
         self.assertNotEqual(0, result.returncode)
         self.assertIn("Missing files:", result.stdout)
+
+    def test_audit_without_profile_or_manifest_reports_missing_files(self) -> None:
+        workspace = self.make_workspace("audit-empty-no-manifest-workspace")
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPTS_DIR / "audit_memory_workspace.py"),
+                str(workspace),
+                "--strict",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("Profile: standard", result.stdout)
+        self.assertIn("Missing files:", result.stdout)
+        self.assertNotIn("Traceback", result.stderr + result.stdout)
+
+    def test_secret_scan_uses_profile_files(self) -> None:
+        light = self.make_workspace("light-secret-workspace")
+        run_script(str(SCRIPTS_DIR / "init_memory_workspace.py"), str(light), "--profile", "light")
+        (light / "LOGBOOK.md").write_text("api_key = 'secretvalue12345'\n", encoding="utf-8")
+        light_result = run_script(str(SCRIPTS_DIR / "audit_memory_workspace.py"), str(light), "--profile", "light")
+        self.assertIn("LOGBOOK.md: Possible secret/credential", light_result.stdout)
+
+        academic = self.make_workspace("academic-secret-workspace")
+        run_script(str(SCRIPTS_DIR / "init_memory_workspace.py"), str(academic), "--profile", "academic")
+        (academic / "LITERATURE_NOTES.md").write_text("github_pat_abcdefghijklmnopqrstuvwxyz\n", encoding="utf-8")
+        (academic / "FIGURES_LOG.md").write_text("-----BEGIN PRIVATE KEY-----\n", encoding="utf-8")
+        academic_result = run_script(str(SCRIPTS_DIR / "audit_memory_workspace.py"), str(academic), "--profile", "academic")
+        self.assertIn("LITERATURE_NOTES.md: Possible secret/credential", academic_result.stdout)
+        self.assertIn("FIGURES_LOG.md: Possible secret/credential", academic_result.stdout)
 
     def test_handoff_generation_runs_on_research_workspace(self) -> None:
         workspace = self.make_workspace("handoff-workspace")
@@ -315,6 +391,37 @@ class SmokeTests(unittest.TestCase):
         self.assertIn("# Handoff Brief", result.stdout)
         self.assertIn("## Excerpt: HUMAN_BRIEF.md", result.stdout)
         self.assertNotIn("Missing `RECOVERY_NOTES.md`", result.stdout)
+
+    def test_handoff_redacts_and_can_fail_on_secret(self) -> None:
+        workspace = self.make_workspace("handoff-secret-workspace")
+        run_script(str(SCRIPTS_DIR / "init_memory_workspace.py"), str(workspace), "--profile", "light")
+        (workspace / "LOGBOOK.md").write_text("api_key = 'secretvalue12345'\n", encoding="utf-8")
+
+        redacted = run_script(
+            str(SCRIPTS_DIR / "make_handoff_brief.py"),
+            str(workspace),
+            "--max-section-chars",
+            "400",
+        )
+        self.assertIn("[REDACTED_SECRET]", redacted.stdout)
+        self.assertNotIn("secretvalue12345", redacted.stdout)
+
+        failed = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPTS_DIR / "make_handoff_brief.py"),
+                str(workspace),
+                "--fail-on-secret",
+                "--max-section-chars",
+                "400",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(2, failed.returncode)
+        self.assertIn("[REDACTED_SECRET]", failed.stdout)
+        self.assertIn("Likely secret detected", failed.stderr)
 
 
 if __name__ == "__main__":

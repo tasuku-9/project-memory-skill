@@ -215,6 +215,138 @@ def canonical_docs_to_trust(files: list[str], memory_dir: str = "") -> str:
     return bullet_docs(docs, memory_dir)
 
 
+def current_state_source_hint(files: list[str]) -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return "RESEARCH_LOG.md, DECISION_LOG.md, cited source, or explicit user instruction"
+    if has_doc(files, "LOGBOOK.md"):
+        return "LOGBOOK.md, cited source, or explicit user instruction"
+    return "DECISION_LOG.md, cited source, or explicit user instruction"
+
+
+def roadmap_detail_note(files: list[str], memory_dir: str = "") -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return f"Detailed rationale belongs in {doc_ref('DECISION_LOG.md', memory_dir)}; detailed evidence belongs in {doc_ref('RESEARCH_LOG.md', memory_dir)}."
+    return f"Detailed rationale and findings that change direction belong in {doc_ref('DECISION_LOG.md', memory_dir)}."
+
+
+def human_brief_sync_markers(files: list[str], memory_dir: str = "") -> str:
+    markers = [
+        f"- {doc_ref('CURRENT_STATE.md', memory_dir)}: ",
+        f"- {doc_ref('ROADMAP.md', memory_dir)}: ",
+        f"- latest {doc_ref('DECISION_LOG.md', memory_dir)}: ",
+    ]
+    if has_doc(files, "RESEARCH_LOG.md"):
+        markers.append(f"- latest {doc_ref('RESEARCH_LOG.md', memory_dir)}: ")
+    markers.append(f"- latest {doc_ref('RECOVERY_NOTES.md', memory_dir)}: ")
+    return "\n".join(markers)
+
+
+def human_brief_proof_sentence(files: list[str], memory_dir: str = "") -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return f"It is not the canonical proof layer. For truth, read {doc_ref('CURRENT_STATE.md', memory_dir)}. For rationale, read {doc_ref('DECISION_LOG.md', memory_dir)}. For evidence, read {doc_ref('RESEARCH_LOG.md', memory_dir)}."
+    return f"It is not the canonical proof layer. For truth, read {doc_ref('CURRENT_STATE.md', memory_dir)}. For rationale and direction-changing findings, read {doc_ref('DECISION_LOG.md', memory_dir)}."
+
+
+def human_brief_evidence_section(files: list[str], memory_dir: str = "") -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return f"""## Important recent research / evidence
+
+- See {doc_ref('RESEARCH_LOG.md', memory_dir)} for methods, results, limitations, and confidence.
+
+| Finding | Confidence | Link |
+| --- | --- | --- |
+|  |  |  |"""
+    return f"""## Important recent evidence / observations
+
+- See {doc_ref('DECISION_LOG.md', memory_dir)} for observations or findings that changed direction.
+
+| Finding | Confidence | Link |
+| --- | --- | --- |
+|  |  |  |"""
+
+
+def docs_guide_routing_rows(files: list[str]) -> str:
+    descriptions = {
+        "README.md": "Entry point, purpose, orientation, how to read the workspace",
+        "CURRENT_STATE.md": "What is true now",
+        "ROADMAP.md": "What will be done next",
+        "DECISION_LOG.md": "What was decided and why",
+        "RESEARCH_LOG.md": "What was investigated, tested, observed, or found",
+        "HYPOTHESIS_LAB.md": "What might be true but is not confirmed",
+        "HUMAN_BRIEF.md": "What a human should read to make decisions",
+        "RECOVERY_NOTES.md": "How to resume quickly after interruption",
+        "LITERATURE_NOTES.md": "Prior work and its relevance",
+        "FIGURES_LOG.md": "Figures and tables linked to data and methods",
+        "DOCS_GUIDE.md": "Rules for where to write information",
+        "CONTEXT_MANIFEST.md": "What to read first, what to trust, what to ignore",
+        "GLOSSARY.md": "Terms and project-specific meanings",
+    }
+    rows = []
+    for rel_path in files:
+        if rel_path in descriptions:
+            rows.append(f"| `{rel_path}` | {descriptions[rel_path]} |")
+    return "\n".join(rows)
+
+
+def docs_guide_research_trigger(files: list[str]) -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return """### Update `RESEARCH_LOG.md` when
+
+- an experiment is run
+- sources are checked
+- an observation changes confidence
+- a null result matters
+- a failure teaches something
+
+Avoid:
+
+- pure speculation
+- claims without method or source"""
+    return """### Record evidence and observations when
+
+- an observation changes project direction
+- a failed attempt teaches something worth preserving
+- a finding affects a decision, risk, blocker, or next action
+
+Use `DECISION_LOG.md` when the observation drives a choice or rejected option.
+Use `HYPOTHESIS_LAB.md` when it is still speculative."""
+
+
+def docs_guide_human_brief_evidence_trigger(files: list[str]) -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return "- a research result changes confidence in a key assumption"
+    return "- an observation or decision changes confidence in a key assumption"
+
+
+def docs_guide_new_idea_test_step(files: list[str]) -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return "4. If it is tested, record the result in `RESEARCH_LOG.md`."
+    return "4. If it is tested and changes direction, record the result or decision in `DECISION_LOG.md`."
+
+
+def docs_guide_evidence_workflow(files: list[str]) -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return """### Research result appears
+
+1. Record method, input, result, interpretation, confidence, and limitations in `RESEARCH_LOG.md`.
+2. Update related hypothesis status in `HYPOTHESIS_LAB.md`.
+3. If direction changes, add a `DECISION_LOG.md` entry.
+4. If the result becomes current truth, update `CURRENT_STATE.md`.
+5. Update `HUMAN_BRIEF.md` only if a human decision, priority, risk, or tracked thread changed."""
+    return """### Important observation appears
+
+1. If it changes direction, add a `DECISION_LOG.md` entry with the observation and rationale.
+2. Update related hypothesis status in `HYPOTHESIS_LAB.md` when relevant.
+3. If the observation becomes current truth, update `CURRENT_STATE.md`.
+4. Update `HUMAN_BRIEF.md` only if a human decision, priority, risk, or tracked thread changed."""
+
+
+def docs_guide_research_anti_pattern(files: list[str]) -> str:
+    if has_doc(files, "RESEARCH_LOG.md"):
+        return "- Recording research results without method, input, confidence, or limitations."
+    return "- Recording observations without context, confidence, or a resulting decision."
+
+
 def render_template(text: str, project_name: str, today: str, profile: str, files: list[str], memory_dir: str = "") -> str:
     capture_trigger = PROFILE_DEFAULTS[profile]["capture_trigger"]
     replacements = {
@@ -234,6 +366,17 @@ def render_template(text: str, project_name: str, today: str, profile: str, file
         "{{INITIAL_DOCS_SUMMARY}}": initial_docs_summary(files),
         "{{INITIAL_NEXT_STEP}}": initial_next_step(files, memory_dir),
         "{{INITIAL_CANONICAL_DOCS}}": canonical_docs_to_trust(files, memory_dir),
+        "{{CURRENT_STATE_SOURCE_HINT}}": current_state_source_hint(files),
+        "{{ROADMAP_DETAIL_NOTE}}": roadmap_detail_note(files, memory_dir),
+        "{{HUMAN_BRIEF_SYNC_MARKERS}}": human_brief_sync_markers(files, memory_dir),
+        "{{HUMAN_BRIEF_PROOF_SENTENCE}}": human_brief_proof_sentence(files, memory_dir),
+        "{{HUMAN_BRIEF_EVIDENCE_SECTION}}": human_brief_evidence_section(files, memory_dir),
+        "{{DOCS_GUIDE_ROUTING_ROWS}}": docs_guide_routing_rows(files),
+        "{{DOCS_GUIDE_RESEARCH_TRIGGER}}": docs_guide_research_trigger(files),
+        "{{DOCS_GUIDE_HUMAN_BRIEF_EVIDENCE_TRIGGER}}": docs_guide_human_brief_evidence_trigger(files),
+        "{{DOCS_GUIDE_NEW_IDEA_TEST_STEP}}": docs_guide_new_idea_test_step(files),
+        "{{DOCS_GUIDE_EVIDENCE_WORKFLOW}}": docs_guide_evidence_workflow(files),
+        "{{DOCS_GUIDE_RESEARCH_ANTI_PATTERN}}": docs_guide_research_anti_pattern(files),
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
@@ -314,6 +457,7 @@ def main() -> int:
     files = load_profile(args.profile)
     explicit_memory_dir = args.memory_dir is not None
     memory_dir = normalize_memory_dir(args.memory_dir)
+    explicit_root_collisions = find_collisions(target_dir, files) if explicit_memory_dir and not memory_dir and not args.overwrite else []
     collisions = [] if explicit_memory_dir or args.overwrite else find_collisions(target_dir, files)
     auto_memory_dir = False
     if collisions:
@@ -331,6 +475,11 @@ def main() -> int:
     if auto_memory_dir:
         print(f"Detected existing same-name files; writing memory workspace under `{memory_dir}/`.")
         print("Collisions: " + ", ".join(collisions))
+    if explicit_root_collisions:
+        print("WARNING: Existing root files detected and --memory-dir . was explicitly requested.")
+        print("This may create a partial memory workspace mixed with user-owned project files.")
+        print("Use --memory-dir memory unless this is intentional.")
+        print("Collisions: " + ", ".join(explicit_root_collisions))
     print("")
 
     counts: dict[str, int] = {}

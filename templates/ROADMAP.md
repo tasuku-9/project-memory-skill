@@ -46,7 +46,7 @@ Useful work that is not yet worth prioritizing.
 
 ## Recently completed
 
-Keep this short. Detailed rationale belongs in `DECISION_LOG.md`; detailed evidence belongs in `RESEARCH_LOG.md`.
+Keep this short. {{ROADMAP_DETAIL_NOTE}}
 
 | Date | Item | Link |
 | --- | --- | --- |

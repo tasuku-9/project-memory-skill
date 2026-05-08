@@ -60,7 +60,22 @@ When adopting an existing project, do not overwrite existing same-name files; pl
 
 **Tracked threads** — `HUMAN_BRIEF.md` maintains a thread table so parallel workstreams are visible at a glance, solving the problem of time-series logs being hard for humans to scan.
 
+## Which profile should I use?
+
+| Situation | Use |
+| --- | --- |
+| Small personal project or minimal continuity | `light` |
+| Long-running product, coding, writing, or planning | `standard` |
+| Debugging, experiments, product discovery, or repeated investigation | `research` |
+| Paper, thesis, literature review, figures, or publication workflow | `academic` |
+
 ## Quick start
+
+Preview before writing:
+
+```bash
+python scripts/init_memory_workspace.py /path/to/project --profile standard --dry-run
+```
 
 Create a new memory workspace:
 
@@ -80,12 +95,6 @@ Adopt an existing project without overwriting same-name files:
 python scripts/init_memory_workspace.py /path/to/project --profile standard --memory-dir memory
 ```
 
-Preview without writing:
-
-```bash
-python scripts/init_memory_workspace.py /path/to/project --profile research --dry-run
-```
-
 Audit an existing workspace:
 
 ```bash
@@ -97,6 +106,8 @@ Generate a handoff brief from existing docs:
 ```bash
 python scripts/make_handoff_brief.py /path/to/project
 ```
+
+Handoff briefs redact likely secrets by default. Use `--fail-on-secret` when automation should stop if secret-like material is detected.
 
 ## Example prompts
 

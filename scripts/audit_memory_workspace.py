@@ -9,31 +9,16 @@ import re
 from datetime import date
 from pathlib import Path
 
+from memory_common import SECRET_RE
+
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 PROFILES_DIR = PACKAGE_ROOT / "profiles"
 MEMORY_DIR_CANDIDATES = ["memory", "project-memory"]
 
-SECRET_RE = re.compile(
-    r'''(?ix)(
-        (api[_-]?key|secret|token|password|passwd|credential)\s*[:=]\s*['"]?[A-Za-z0-9_./+=:@-]{8,}
-        | AKIA[0-9A-Z]{16}
-        | github_pat_[A-Za-z0-9_]{20,}
-        | gh[pousr]_[A-Za-z0-9_]{20,}
-        | -----BEGIN\s+(RSA\s+|DSA\s+|EC\s+|OPENSSH\s+)?PRIVATE\s+KEY-----
-    )''',
-    re.VERBOSE,
-)
 SPECULATION_RE = re.compile(r"(?i)\b(might|maybe|could be|possibly|hypothesis|untested|speculative)\b|かもしれ|仮説|未検証")
 YES_RE = re.compile(r"(?im)^-\s*human_brief_update\s*:\s*yes\s*$")
 DATE_FIELD_RE = re.compile(r"(?im)^-\s*date\s*:\s*(\d{4}-\d{2}-\d{2})\s*$")
 LAST_UPDATED_RE = re.compile(r"(?im)^Last updated:\s*(\d{4}-\d{2}-\d{2})\s*$")
-LAST_SYNCED_FIELDS = [
-    "`CURRENT_STATE.md`:",
-    "`ROADMAP.md`:",
-    "latest `DECISION_LOG.md`:",
-    "latest `RESEARCH_LOG.md`:",
-    "latest `RECOVERY_NOTES.md`:",
-]
 EXPECTED_CURRENT_SECTIONS = [
     "## Stable facts",
     "## Active operating decisions",
@@ -66,6 +51,8 @@ def load_profile(profile: str) -> list[str]:
 
 
 def read_text(path: Path) -> str:
+    if not path.exists():
+        return ""
     try:
         return path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
@@ -103,8 +90,27 @@ def display_path(rel_path: str, memory_dir: str = "") -> str:
     return f"{memory_dir}/{rel_path}" if memory_dir else rel_path
 
 
+def doc_ref(rel_path: str, memory_dir: str = "") -> str:
+    return f"`{display_path(rel_path, memory_dir)}`"
+
+
+def expected_human_brief_sync_markers(required: list[str], memory_dir: str = "") -> list[str]:
+    markers = [
+        f"{doc_ref('CURRENT_STATE.md', memory_dir)}:",
+        f"{doc_ref('ROADMAP.md', memory_dir)}:",
+        f"latest {doc_ref('DECISION_LOG.md', memory_dir)}:",
+    ]
+    if "RESEARCH_LOG.md" in required:
+        markers.append(f"latest {doc_ref('RESEARCH_LOG.md', memory_dir)}:")
+    markers.append(f"latest {doc_ref('RECOVERY_NOTES.md', memory_dir)}:")
+    return markers
+
+
 def detect_profile(target: Path, memory_dir: str = "") -> str:
-    manifest = read_text(doc_path(target, "CONTEXT_MANIFEST.md", memory_dir))
+    manifest_path = doc_path(target, "CONTEXT_MANIFEST.md", memory_dir)
+    if not manifest_path.exists():
+        return "standard"
+    manifest = read_text(manifest_path)
     match = re.search(r"(?im)^Profile:\s*(light|standard|research|academic)\s*$", manifest)
     return match.group(1) if match else "standard"
 
@@ -238,7 +244,7 @@ def audit(target: Path, profile: str, memory_dir: str = "") -> dict[str, object]
         hb_updated = extract_last_updated(hb_text)
         if hb_updated is None:
             warnings.append({"file": display_path("HUMAN_BRIEF.md", memory_dir), "issue": "Missing or invalid `Last updated:` field."})
-        for marker in LAST_SYNCED_FIELDS:
+        for marker in expected_human_brief_sync_markers(required, memory_dir):
             if marker not in hb_text:
                 warnings.append({"file": display_path("HUMAN_BRIEF.md", memory_dir), "issue": f"Missing sync marker: {marker}"})
         if "## Tracked threads" not in hb_text and "## Active threads" not in hb_text:
@@ -267,7 +273,9 @@ def audit(target: Path, profile: str, memory_dir: str = "") -> dict[str, object]
             if pattern not in text:
                 warnings.append({"file": display_path(".contextignore", memory_dir), "issue": f"Missing recommended ignore pattern: {pattern}"})
 
-    for rel in ["README.md", "CURRENT_STATE.md", "ROADMAP.md", "DECISION_LOG.md", "RESEARCH_LOG.md", "HYPOTHESIS_LAB.md", "HUMAN_BRIEF.md", "RECOVERY_NOTES.md"]:
+    for rel in required:
+        if not rel.endswith(".md"):
+            continue
         path = doc_path(target, rel, memory_dir)
         if path.exists():
             hits = line_hits(read_text(path), SECRET_RE)

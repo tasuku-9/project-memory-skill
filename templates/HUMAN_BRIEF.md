@@ -2,15 +2,11 @@
 
 Last updated: {{DATE}}
 Last synced with:
-- `CURRENT_STATE.md`: 
-- `ROADMAP.md`: 
-- latest `DECISION_LOG.md`: 
-- latest `RESEARCH_LOG.md`: 
-- latest `RECOVERY_NOTES.md`: 
+{{HUMAN_BRIEF_SYNC_MARKERS}}
 
 This file is the human-readable orientation layer. It should help a person make decisions without reading every log.
 
-It is not the canonical proof layer. For truth, read `CURRENT_STATE.md`. For rationale, read `DECISION_LOG.md`. For evidence, read `RESEARCH_LOG.md`.
+{{HUMAN_BRIEF_PROOF_SENTENCE}}
 
 ## One-paragraph summary
 
@@ -54,13 +50,7 @@ It is not the canonical proof layer. For truth, read `CURRENT_STATE.md`. For rat
 | --- | --- | --- |
 |  |  |  |
 
-## Important recent research / evidence
-
-- See `RESEARCH_LOG.md` for methods, results, limitations, and confidence.
-
-| Finding | Confidence | Link |
-| --- | --- | --- |
-|  |  |  |
+{{HUMAN_BRIEF_EVIDENCE_SECTION}}
 
 ## Open risks and concerns
 

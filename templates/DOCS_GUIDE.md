@@ -61,16 +61,7 @@ Do not make it the source of truth.
 
 | File | Write this here |
 | --- | --- |
-| `README.md` | Entry point, purpose, orientation, how to read the workspace |
-| `CURRENT_STATE.md` | What is true now |
-| `ROADMAP.md` | What will be done next |
-| `DECISION_LOG.md` | What was decided and why |
-| `RESEARCH_LOG.md` | What was investigated, tested, observed, or found |
-| `HYPOTHESIS_LAB.md` | What might be true but is not confirmed |
-| `HUMAN_BRIEF.md` | What a human should read to make decisions |
-| `RECOVERY_NOTES.md` | How to resume quickly after interruption |
-| `CONTEXT_MANIFEST.md` | What to read first, what to trust, what to ignore |
-| `GLOSSARY.md` | Terms and project-specific meanings |
+{{DOCS_GUIDE_ROUTING_ROWS}}
 
 ## Update triggers
 
@@ -112,18 +103,7 @@ Avoid:
 - routine edits
 - entries without rationale
 
-### Update `RESEARCH_LOG.md` when
-
-- an experiment is run
-- sources are checked
-- an observation changes confidence
-- a null result matters
-- a failure teaches something
-
-Avoid:
-
-- pure speculation
-- claims without method or source
+{{DOCS_GUIDE_RESEARCH_TRIGGER}}
 
 ### Update `HYPOTHESIS_LAB.md` when
 
@@ -143,7 +123,7 @@ Avoid:
 
 - the current goal, main blocker, main risk, or next decision changes
 - a decision changes project direction, priority, risk, tracked threads, or required human decisions
-- a research result changes confidence in a key assumption
+{{DOCS_GUIDE_HUMAN_BRIEF_EVIDENCE_TRIGGER}}
 - a hypothesis is promoted into `CURRENT_STATE.md`
 - a tracked thread starts, pauses, resumes, closes, or becomes blocked
 - a recovery checkpoint changes what a human should do next
@@ -170,18 +150,12 @@ Avoid:
 1. Add it to `HYPOTHESIS_LAB.md`, usually under `Raw sparks`.
 2. If it becomes structured or recurring, move or summarize it under `Working hypotheses`.
 3. If it becomes planned work, add it to `ROADMAP.md`.
-4. If it is tested, record the result in `RESEARCH_LOG.md`.
+{{DOCS_GUIDE_NEW_IDEA_TEST_STEP}}
 5. If it drives a choice, record the choice in `DECISION_LOG.md`.
 6. If it becomes true now, update `CURRENT_STATE.md`.
 7. If the session may stop, update `RECOVERY_NOTES.md`.
 
-### Research result appears
-
-1. Record method, input, result, interpretation, confidence, and limitations in `RESEARCH_LOG.md`.
-2. Update related hypothesis status in `HYPOTHESIS_LAB.md`.
-3. If direction changes, add a `DECISION_LOG.md` entry.
-4. If the result becomes current truth, update `CURRENT_STATE.md`.
-5. Update `HUMAN_BRIEF.md` only if a human decision, priority, risk, or tracked thread changed.
+{{DOCS_GUIDE_EVIDENCE_WORKFLOW}}
 
 ### Project direction changes
 
@@ -205,7 +179,7 @@ Avoid:
 - Treating `ROADMAP.md` as proof something is done.
 - Treating `HYPOTHESIS_LAB.md` as truth.
 - Recording decisions without alternatives or rationale.
-- Recording research results without method, input, confidence, or limitations.
+{{DOCS_GUIDE_RESEARCH_ANTI_PATTERN}}
 - Letting recovery notes become a long hidden history.
 - Copying private data into canonical docs.
 - Letting `AGENTS.md` or `CLAUDE.md` become a second hidden source of truth.

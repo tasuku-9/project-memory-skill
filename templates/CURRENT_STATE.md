@@ -19,7 +19,7 @@ Use this section for things supported by evidence and safe to treat as current t
 
 | ID | Statement | Confidence | Source | Revisit when | Last checked |
 | --- | --- | --- | --- | --- | --- |
-| CST-001 | <!-- stable fact --> | <!-- high/medium --> | <!-- RESEARCH_LOG, DECISION_LOG, cited source, or explicit user instruction --> | <!-- condition --> | {{DATE}} |
+| CST-001 | <!-- stable fact --> | <!-- high/medium --> | <!-- {{CURRENT_STATE_SOURCE_HINT}} --> | <!-- condition --> | {{DATE}} |
 
 ## Active operating decisions
 

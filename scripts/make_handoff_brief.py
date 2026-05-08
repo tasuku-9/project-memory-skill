@@ -13,6 +13,8 @@ import re
 import sys
 from pathlib import Path
 
+from memory_common import SECRET_RE, redact_secrets
+
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 PROFILES_DIR = PACKAGE_ROOT / "profiles"
 MEMORY_DIR_CANDIDATES = ["memory", "project-memory"]
@@ -142,7 +144,12 @@ def main() -> int:
     parser.add_argument("--profile", choices=PROFILE_CHOICES, help="Profile to use; defaults to CONTEXT_MANIFEST.md when available")
     parser.add_argument("--memory-dir", help="Memory subdirectory to read; auto-detects memory/ or project-memory/ when omitted")
     parser.add_argument("--max-section-chars", type=int, default=2500)
+    parser.add_argument("--no-redact-secrets", action="store_true", help="Do not redact likely secrets from the generated brief")
+    parser.add_argument("--fail-on-secret", action="store_true", help="Exit non-zero if likely secrets were found in the generated brief")
     args = parser.parse_args()
+
+    if args.fail_on_secret and args.no_redact_secrets:
+        raise SystemExit("--fail-on-secret cannot be combined with --no-redact-secrets.")
 
     target = Path(args.target).expanduser().resolve()
     memory_dir = detect_memory_dir(target, args.memory_dir)
@@ -150,42 +157,55 @@ def main() -> int:
     profile_files = set(load_profile(profile))
     project = target.name
     today = dt.date.today().isoformat()
+    secret_found = False
 
-    print(f"# Handoff Brief - {project} - {today}")
-    print("")
-    print("This is a generated draft. Review before sending to another human or model.")
-    print("")
+    def safe_print(text: str = "") -> None:
+        nonlocal secret_found
+        if SECRET_RE.search(text):
+            secret_found = True
+            if not args.no_redact_secrets:
+                text = redact_secrets(text)
+        print(text)
+
+    safe_print(f"# Handoff Brief - {project} - {today}")
+    safe_print("")
+    safe_print("This is a generated draft. Review before sending to another human or model.")
+    safe_print("")
 
     recovery = read_text(doc_path(target, "RECOVERY_NOTES.md", memory_dir))
-    print("## Latest recovery checkpoint")
-    print("")
-    print(excerpt(latest_markdown_section(recovery, r"^##\s+\d{4}-\d{2}-\d{2}"), args.max_section_chars) if recovery else "Missing `RECOVERY_NOTES.md`.")
-    print("")
+    safe_print("## Latest recovery checkpoint")
+    safe_print("")
+    safe_print(excerpt(latest_markdown_section(recovery, r"^##\s+\d{4}-\d{2}-\d{2}"), args.max_section_chars) if recovery else "Missing `RECOVERY_NOTES.md`.")
+    safe_print("")
 
     for rel in [item for item in EXCERPT_ORDER if item in profile_files]:
         text = read_text(doc_path(target, rel, memory_dir))
-        print(f"## Excerpt: {rel}")
-        print("")
-        print(excerpt(text, args.max_section_chars) if text else f"Missing `{rel}`.")
-        print("")
+        safe_print(f"## Excerpt: {rel}")
+        safe_print("")
+        safe_print(excerpt(text, args.max_section_chars) if text else f"Missing `{rel}`.")
+        safe_print("")
 
     for rel in [item for item in LATEST_SECTION_PATTERNS if item in profile_files]:
         text = read_text(doc_path(target, rel, memory_dir))
-        print(f"## Latest relevant section: {rel}")
-        print("")
+        safe_print(f"## Latest relevant section: {rel}")
+        safe_print("")
         pattern = LATEST_SECTION_PATTERNS.get(rel)
         section = latest_markdown_section(text, pattern)
-        print(excerpt(section, args.max_section_chars) if section else ("No matching entries found." if text else f"Missing `{rel}`."))
-        print("")
+        safe_print(excerpt(section, args.max_section_chars) if section else ("No matching entries found." if text else f"Missing `{rel}`."))
+        safe_print("")
 
     manifest = read_text(doc_path(target, "CONTEXT_MANIFEST.md", memory_dir))
-    print("## Context manifest excerpt")
-    print("")
-    print(excerpt(manifest, args.max_section_chars) if manifest else "Missing `CONTEXT_MANIFEST.md`.")
-    print("")
-    print("## Next recommended action")
-    print("")
-    print("Review this generated brief, remove sensitive material, then give it to the next human or model.")
+    safe_print("## Context manifest excerpt")
+    safe_print("")
+    safe_print(excerpt(manifest, args.max_section_chars) if manifest else "Missing `CONTEXT_MANIFEST.md`.")
+    safe_print("")
+    safe_print("## Next recommended action")
+    safe_print("")
+    safe_print("Review this generated brief, remove sensitive material, then give it to the next human or model.")
+
+    if args.fail_on_secret and secret_found:
+        print("Likely secret detected in handoff brief.", file=sys.stderr)
+        return 2
     return 0
 
 

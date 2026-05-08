@@ -19,6 +19,7 @@ profiles/standard.txt
 scripts/audit_memory_workspace.py
 scripts/init_memory_workspace.py
 scripts/make_handoff_brief.py
+scripts/memory_common.py
 tasks/adopt_existing.md
 tasks/conflict_resolution.md
 tasks/init_session.md
