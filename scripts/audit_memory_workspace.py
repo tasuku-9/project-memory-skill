@@ -9,11 +9,10 @@ import re
 from datetime import date
 from pathlib import Path
 
-from memory_common import SECRET_RE
+from memory_common import MemoryWorkspace, markdown_headings, read_text, redact_secrets, secret_hits, workspace_path
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 PROFILES_DIR = PACKAGE_ROOT / "profiles"
-MEMORY_DIR_CANDIDATES = ["memory", "project-memory"]
 
 SPECULATION_RE = re.compile(r"(?i)\b(might|maybe|could be|possibly|hypothesis|untested|speculative)\b|かもしれ|仮説|未検証")
 YES_RE = re.compile(r"(?im)^-\s*human_brief_update\s*:\s*yes\s*$")
@@ -50,74 +49,24 @@ def load_profile(profile: str) -> list[str]:
     ]
 
 
-def read_text(path: Path) -> str:
-    if not path.exists():
-        return ""
-    try:
-        return path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        return path.read_text(errors="replace")
+def expected_human_brief_sync_markers(required: list[str], workspace: MemoryWorkspace) -> list[str]:
+    def doc_ref(logical: str) -> str:
+        return f"`{workspace.location(logical)}`"
 
-
-def normalize_memory_dir(value: str | None) -> str:
-    if value is None:
-        return ""
-    value = value.strip().replace("\\", "/")
-    if value in {"", ".", "./"}:
-        return ""
-    path = Path(value)
-    if path.is_absolute() or ".." in path.parts:
-        raise SystemExit("--memory-dir must be a relative directory inside the target workspace.")
-    return path.as_posix().strip("/")
-
-
-def detect_memory_dir(target: Path, memory_dir: str | None = None) -> str:
-    if memory_dir is not None:
-        return normalize_memory_dir(memory_dir)
-    if (target / "CONTEXT_MANIFEST.md").exists():
-        return ""
-    for candidate in MEMORY_DIR_CANDIDATES:
-        if (target / candidate / "CONTEXT_MANIFEST.md").exists():
-            return candidate
-    return ""
-
-
-def doc_path(target: Path, rel_path: str, memory_dir: str = "") -> Path:
-    return (target / memory_dir / rel_path) if memory_dir else (target / rel_path)
-
-
-def display_path(rel_path: str, memory_dir: str = "") -> str:
-    return f"{memory_dir}/{rel_path}" if memory_dir else rel_path
-
-
-def doc_ref(rel_path: str, memory_dir: str = "") -> str:
-    return f"`{display_path(rel_path, memory_dir)}`"
-
-
-def expected_human_brief_sync_markers(required: list[str], memory_dir: str = "") -> list[str]:
     markers = [
-        f"{doc_ref('CURRENT_STATE.md', memory_dir)}:",
-        f"{doc_ref('ROADMAP.md', memory_dir)}:",
-        f"latest {doc_ref('DECISION_LOG.md', memory_dir)}:",
+        f"{doc_ref('CURRENT_STATE.md')}:",
+        f"{doc_ref('ROADMAP.md')}:",
+        f"latest {doc_ref('DECISION_LOG.md')}:",
     ]
     if "RESEARCH_LOG.md" in required:
-        markers.append(f"latest {doc_ref('RESEARCH_LOG.md', memory_dir)}:")
-    markers.append(f"latest {doc_ref('RECOVERY_NOTES.md', memory_dir)}:")
+        markers.append(f"latest {doc_ref('RESEARCH_LOG.md')}:")
+    markers.append(f"latest {doc_ref('RECOVERY_NOTES.md')}:")
     return markers
-
-
-def detect_profile(target: Path, memory_dir: str = "") -> str:
-    manifest_path = doc_path(target, "CONTEXT_MANIFEST.md", memory_dir)
-    if not manifest_path.exists():
-        return "standard"
-    manifest = read_text(manifest_path)
-    match = re.search(r"(?im)^Profile:\s*(light|standard|research|academic)\s*$", manifest)
-    return match.group(1) if match else "standard"
 
 
 def line_hits(text: str, pattern: re.Pattern[str], max_hits: int = 5) -> list[str]:
     hits: list[str] = []
-    for i, line in enumerate(text.splitlines(), 1):
+    for i, line in enumerate(redact_secrets(text).splitlines(), 1):
         if pattern.search(line):
             hits.append(f"line {i}: {line[:160]}")
             if len(hits) >= max_hits:
@@ -152,7 +101,46 @@ def extract_trigger_dates(text: str) -> list[date]:
     return dates
 
 
-def audit(target: Path, profile: str, memory_dir: str = "") -> dict[str, object]:
+def figure_asset_warnings(workspace: MemoryWorkspace) -> list[dict[str, object]]:
+    text = redact_secrets(read_text(workspace.path("FIGURES_LOG.md")))
+    headings = markdown_headings(text)
+    warnings: list[dict[str, object]] = []
+    for index, (start, level, heading) in enumerate(headings):
+        if not re.match(r"^### FIG-\d+\b", heading):
+            continue
+        end = next((pos for pos, depth, _ in headings[index + 1:] if depth <= level), len(text))
+        section = re.sub(r"<!--.*?-->", "", text[start:end], flags=re.DOTALL)
+        fields = dict(re.findall(r"^\*\*([^*]+)\*\*:[ \t]*(.*?)(?=^\*\*|\Z)", section, re.MULTILINE | re.DOTALL))
+        assets = fields.get("Asset path(s)", "").strip()
+        storage = fields.get("Storage", "").strip().lower()
+        if not assets and not fields.get("Title", "").strip() and storage not in {"saved", "pending", "unavailable"}:
+            continue
+        issues = []
+        if storage in {"pending", "unavailable"}:
+            issues.append(f"Visual asset not saved ({storage}).")
+        if not assets and storage not in {"pending", "unavailable"}:
+            issues.append("No saved visual asset path recorded.")
+        for line in assets.splitlines():
+            value = re.sub(r"^[-*+]\s+", "", line.strip()).strip("`")
+            if not value:
+                continue
+            link = re.fullmatch(r"!?\[[^]]*\]\((?:<([^>]+)>|([^)]+))\)", value)
+            if link:
+                value = link[1] or link[2]
+            try:
+                path = workspace_path(workspace.target, value)
+                if not path.is_file() or path.stat().st_size == 0:
+                    issues.append(f"Visual asset is missing or empty: {redact_secrets(value)}")
+            except (ValueError, OSError):
+                issues.append("Visual asset path is not a readable local file inside the workspace.")
+        for issue in issues:
+            warnings.append({"file": workspace.location("FIGURES_LOG.md"), "issue": f"{heading[4:]}: {issue}"})
+    return warnings
+
+
+def audit(target: Path, profile: str, memory_dir: str | None = None) -> dict[str, object]:
+    workspace = MemoryWorkspace(target, memory_dir)
+    memory_dir = workspace.memory_dir
     required = load_profile(profile)
     result: dict[str, object] = {
         "target": str(target),
@@ -166,121 +154,124 @@ def audit(target: Path, profile: str, memory_dir: str = "") -> dict[str, object]
     ok: list[str] = result["ok"]  # type: ignore[assignment]
 
     for rel in required:
-        path = doc_path(target, rel, memory_dir)
-        if not path.exists():
-            result["missing"].append(display_path(rel, memory_dir))  # type: ignore[index]
+        path = workspace.path(rel)
+        if not path.is_file():
+            result["missing"].append(workspace.location(rel))  # type: ignore[index]
         else:
-            ok.append(display_path(rel, memory_dir))
+            ok.append(workspace.location(rel))
 
-    readme = doc_path(target, "README.md", memory_dir)
+    readme = workspace.path("README.md")
     if readme.exists():
         text = read_text(readme)
         if len(text) > 20000:
-            warnings.append({"file": display_path("README.md", memory_dir), "issue": "README is large; consider moving current truth/history/plans into canonical docs."})
+            warnings.append({"file": workspace.location("README.md"), "issue": "README is large; consider moving current truth/history/plans into canonical docs."})
         overloaded_terms = ["Decision Log", "Research Log", "Hypothesis", "Roadmap", "Current State"]
         if sum(term.lower() in text.lower() for term in overloaded_terms) >= 4 and len(text) > 8000:
-            warnings.append({"file": display_path("README.md", memory_dir), "issue": "README may be carrying multiple canonical roles."})
+            warnings.append({"file": workspace.location("README.md"), "issue": "README may be carrying multiple canonical roles."})
 
-    roadmap = doc_path(target, "ROADMAP.md", memory_dir)
+    roadmap = workspace.path("ROADMAP.md")
     if roadmap.exists():
         text = read_text(roadmap)
         for section in EXPECTED_ROADMAP_SECTIONS:
             if section not in text:
-                warnings.append({"file": display_path("ROADMAP.md", memory_dir), "issue": f"Missing expected section: {section}"})
+                warnings.append({"file": workspace.location("ROADMAP.md"), "issue": f"Missing expected section: {section}"})
 
-    decision_log = doc_path(target, "DECISION_LOG.md", memory_dir)
+    decision_log = workspace.path("DECISION_LOG.md")
     if decision_log.exists():
         text = read_text(decision_log)
         for section in EXPECTED_DECISION_SECTIONS:
             if section not in text:
-                warnings.append({"file": display_path("DECISION_LOG.md", memory_dir), "issue": f"Missing expected section: {section}"})
+                warnings.append({"file": workspace.location("DECISION_LOG.md"), "issue": f"Missing expected section: {section}"})
 
-    current_state = doc_path(target, "CURRENT_STATE.md", memory_dir)
+    current_state = workspace.path("CURRENT_STATE.md")
     if current_state.exists():
         text = read_text(current_state)
         hits = line_hits(text, SPECULATION_RE)
         if hits:
             warnings.append({
-                "file": display_path("CURRENT_STATE.md", memory_dir),
+                "file": workspace.location("CURRENT_STATE.md"),
                 "issue": "Possible speculative language in current truth file. Verify these are confirmed.",
                 "examples": hits,
             })
         for section in EXPECTED_CURRENT_SECTIONS:
             if section not in text:
-                warnings.append({"file": display_path("CURRENT_STATE.md", memory_dir), "issue": f"Missing expected section: {section}"})
+                warnings.append({"file": workspace.location("CURRENT_STATE.md"), "issue": f"Missing expected section: {section}"})
         for field in ["Source", "Revisit when"]:
             if field not in text:
-                warnings.append({"file": display_path("CURRENT_STATE.md", memory_dir), "issue": f"Current state may be missing `{field}` fields."})
+                warnings.append({"file": workspace.location("CURRENT_STATE.md"), "issue": f"Current state may be missing `{field}` fields."})
 
-    hypothesis = doc_path(target, "HYPOTHESIS_LAB.md", memory_dir)
+    hypothesis = workspace.path("HYPOTHESIS_LAB.md")
     if hypothesis.exists():
         text = read_text(hypothesis)
         for section in EXPECTED_HYP_SECTIONS:
             if section not in text:
-                warnings.append({"file": display_path("HYPOTHESIS_LAB.md", memory_dir), "issue": f"Missing expected section: {section}"})
+                warnings.append({"file": workspace.location("HYPOTHESIS_LAB.md"), "issue": f"Missing expected section: {section}"})
         hyp_count = len(re.findall(r"^##\s+HYP-", text, flags=re.MULTILINE))
         status_count = len(re.findall(r"status\s*:", text, flags=re.IGNORECASE))
         if hyp_count and hyp_count > status_count:
-            warnings.append({"file": display_path("HYPOTHESIS_LAB.md", memory_dir), "issue": "Some working hypotheses may be missing status fields."})
+            warnings.append({"file": workspace.location("HYPOTHESIS_LAB.md"), "issue": "Some working hypotheses may be missing status fields."})
 
-    research = doc_path(target, "RESEARCH_LOG.md", memory_dir)
+    research = workspace.path("RESEARCH_LOG.md")
     if research.exists():
         text = read_text(research)
         for field in ["method", "result", "interpretation", "confidence", "limitations"]:
             if field not in text.lower():
-                warnings.append({"file": display_path("RESEARCH_LOG.md", memory_dir), "issue": f"Research log may be missing `{field}` fields."})
+                warnings.append({"file": workspace.location("RESEARCH_LOG.md"), "issue": f"Research log may be missing `{field}` fields."})
 
-    recovery = doc_path(target, "RECOVERY_NOTES.md", memory_dir)
+    recovery = workspace.path("RECOVERY_NOTES.md")
     if recovery.exists():
         text = read_text(recovery)
         if len(text) > 25000:
-            warnings.append({"file": display_path("RECOVERY_NOTES.md", memory_dir), "issue": "Recovery notes are large; keep only compact checkpoints and move detail to canonical docs."})
+            warnings.append({"file": workspace.location("RECOVERY_NOTES.md"), "issue": "Recovery notes are large; keep only compact checkpoints and move detail to canonical docs."})
         if "Next recommended step" not in text and "Next Recommended Step" not in text:
-            warnings.append({"file": display_path("RECOVERY_NOTES.md", memory_dir), "issue": "No obvious next recommended step found."})
+            warnings.append({"file": workspace.location("RECOVERY_NOTES.md"), "issue": "No obvious next recommended step found."})
 
-    human_brief = doc_path(target, "HUMAN_BRIEF.md", memory_dir)
+    human_brief = workspace.path("HUMAN_BRIEF.md")
     if human_brief.exists():
         hb_text = read_text(human_brief)
         hb_updated = extract_last_updated(hb_text)
         if hb_updated is None:
-            warnings.append({"file": display_path("HUMAN_BRIEF.md", memory_dir), "issue": "Missing or invalid `Last updated:` field."})
-        for marker in expected_human_brief_sync_markers(required, memory_dir):
+            warnings.append({"file": workspace.location("HUMAN_BRIEF.md"), "issue": "Missing or invalid `Last updated:` field."})
+        for marker in expected_human_brief_sync_markers(required, workspace):
             if marker not in hb_text:
-                warnings.append({"file": display_path("HUMAN_BRIEF.md", memory_dir), "issue": f"Missing sync marker: {marker}"})
+                warnings.append({"file": workspace.location("HUMAN_BRIEF.md"), "issue": f"Missing sync marker: {marker}"})
         if "## Tracked threads" not in hb_text and "## Active threads" not in hb_text:
-            warnings.append({"file": display_path("HUMAN_BRIEF.md", memory_dir), "issue": "Missing `Tracked threads` or `Active threads` section."})
+            warnings.append({"file": workspace.location("HUMAN_BRIEF.md"), "issue": "Missing `Tracked threads` or `Active threads` section."})
         trigger_dates: list[date] = []
         for rel in ["DECISION_LOG.md", "RESEARCH_LOG.md"]:
-            path = doc_path(target, rel, memory_dir)
+            path = workspace.path(rel)
             if path.exists():
                 trigger_dates.extend(extract_trigger_dates(read_text(path)))
         if trigger_dates and hb_updated is not None:
             latest_trigger = max(trigger_dates)
             if latest_trigger > hb_updated:
                 warnings.append({
-                    "file": display_path("HUMAN_BRIEF.md", memory_dir),
+                    "file": workspace.location("HUMAN_BRIEF.md"),
                     "issue": "HUMAN_BRIEF.md may be stale relative to entries marked `human_brief_update: yes`.",
                     "latest_trigger": latest_trigger.isoformat(),
                     "last_updated": hb_updated.isoformat(),
                 })
 
-    contextignore = doc_path(target, ".contextignore", memory_dir)
+    contextignore = workspace.path(".contextignore")
     if not contextignore.exists():
-        warnings.append({"file": display_path(".contextignore", memory_dir), "issue": "Missing context ignore file; generated logs/caches/private files may be read accidentally."})
+        warnings.append({"file": workspace.location(".contextignore"), "issue": "Missing context ignore file; generated logs/caches/private files may be read accidentally."})
     else:
         text = read_text(contextignore)
         for pattern in ["private/", ".cache/", "logs/", "*.log"]:
             if pattern not in text:
-                warnings.append({"file": display_path(".contextignore", memory_dir), "issue": f"Missing recommended ignore pattern: {pattern}"})
+                warnings.append({"file": workspace.location(".contextignore"), "issue": f"Missing recommended ignore pattern: {pattern}"})
+
+    if "FIGURES_LOG.md" in required:
+        warnings.extend(figure_asset_warnings(workspace))
 
     for rel in required:
         if not rel.endswith(".md"):
             continue
-        path = doc_path(target, rel, memory_dir)
+        path = workspace.path(rel)
         if path.exists():
-            hits = line_hits(read_text(path), SECRET_RE)
+            hits = secret_hits(read_text(path))
             if hits:
-                warnings.append({"file": display_path(rel, memory_dir), "issue": "Possible secret/credential in canonical docs.", "examples": hits})
+                warnings.append({"file": workspace.location(rel), "issue": "Possible secret/credential in canonical docs.", "examples": hits})
 
     return result
 
@@ -295,9 +286,12 @@ def main() -> int:
     args = parser.parse_args()
 
     target = Path(args.target).expanduser().resolve()
-    memory_dir = detect_memory_dir(target, args.memory_dir)
-    profile = args.profile or detect_profile(target, memory_dir)
-    result = audit(target, profile, memory_dir)
+    try:
+        workspace = MemoryWorkspace(target, args.memory_dir)
+        profile = args.profile or workspace.profile()
+        result = audit(target, profile, workspace.memory_dir)
+    except ValueError as exc:
+        parser.error(str(exc))
 
     if args.json:
         print(json.dumps(result, indent=2, ensure_ascii=False))

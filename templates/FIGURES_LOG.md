@@ -6,7 +6,7 @@ This file tracks every visual asset, figure, and table used in this project. It 
 
 ## How to use this file
 
-Each entry links a visual output to its saved asset, original source, data source, generation method, and purpose. This ensures any image, figure, or table can be found, reproduced, updated, or explained during peer review.
+Each entry links a visual output to its asset, original source, data source, generation method, and purpose. Traceability supports retrieval and reproduction; it does not guarantee either when files or methods are missing.
 
 ## Asset storage rule
 
@@ -19,7 +19,11 @@ Use stable filenames based on the figure ID, for example:
 - `figures/FIG-001-final.svg`
 - `figures/inbox/IMG-{{DATE}}-001.png`
 
-If the user provides a visual asset during chat, save the original durable copy before relying on it. If it is not yet clear whether the asset will become a formal figure, save it under `figures/inbox/` and record a provisional entry. When it becomes a formal figure, link or rename it to a stable `FIG-xxx` asset path.
+Copy original bytes only when the host exposes them. Verify that each saved file exists and is non-empty before setting Storage to `saved`. List project-root-relative paths, one backticked path or Markdown link per line under Asset path(s). Do not overwrite a different original with the same filename.
+
+If original bytes cannot be retrieved, set Storage to `unavailable`, leave saved paths empty, and explain the reason in Notes. Use `pending` for an unfinished save; never present a proposed path or a recreation as the saved original.
+
+Accessible transient bytes may be copied immediately to avoid loss. Use `figures/inbox/` for assets that are not yet formal figures. Canonical entries and interpretation follow Conversation capture in `DOCS_GUIDE.md`; do not interrupt ongoing discussion with holding-status reports.
 
 Preserve the original supplied image when a processed, cropped, annotated, or regenerated version is created. Record both the original path and the derived/final path.
 
@@ -32,6 +36,7 @@ Preserve the original supplied image when a processed, cropped, annotated, or re
 **Title**: 
 **Type**: chart / diagram / photo / screenshot / schematic
 **Status**: draft / final / superseded by FIG-xxx
+**Storage**: pending / saved / unavailable
 
 **Asset path(s)**:
 <!-- Saved visual path(s), usually figures/FIG-xxx.ext and/or figures/FIG-xxx-source.ext -->

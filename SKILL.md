@@ -96,21 +96,15 @@ For non-trivial work, briefly state which memory files will be read and which re
 
 ## Conversation capture rule
 
-During a work session, do not wait for the human to explicitly ask for logging.
+Use the project's `DOCS_GUIDE.md` conversation capture policy and the capture strength in `CONTEXT_MANIFEST.md`. Routing rules below identify destinations, not independent permission to write immediately.
 
-Do not write to canonical memory files at the first appearance of an idea.
-Treat new hypotheses, decisions, observations, blockers, risks, and next actions as capture candidates until they stabilize.
-Keep capture candidates silently during the current session.
-Do not announce every candidate or repeatedly say that it is being held for later.
+By default, keep candidates silently during discussion. Automatic writes happen at a topic change, conclusion, or genuine stopping point, only for material allowed by the selected capture strength that changes project memory. A clear idea alone is not a write trigger. An explicit request to record something can override the wait.
 
-Write capture candidates to memory when the topic changes, the discussion reaches a conclusion, the session is ending or may be interrupted, the human explicitly asks to record something, or a decision, result, blocker, or next action becomes clear enough to preserve.
-After writing, briefly report what was recorded and where.
+At that boundary, preserve the latest outcome, not superseded drafts or withdrawn proposals. Still-useful unresolved ideas remain explicitly unverified. Do not recreate unchanged entries or update a checkpoint solely because a turn ended.
 
-Capture only material that changes project memory.
-Do not summarize routine conversation, temporary phrasing, or early ideas that are still being refined.
+Plan only necessary edits, then briefly report actual writes. If nothing changed, no memory update or holding-status announcement is needed during ordinary conversation.
 
-Use `RECOVERY_NOTES.md` only as a short resume pointer.
-Do not make it the source of truth.
+Use `RECOVERY_NOTES.md` only as a short resume pointer. Session-local candidates are not durable; abrupt chat loss before a write cannot be recovered by this skill alone.
 
 ## Profile and customization rule
 
@@ -270,7 +264,7 @@ Low-commitment captures. These may be vague, incomplete, or speculative.
 Ideas that have recurring relevance, clearer structure, or a defined next step.
 
 Do not require the human to explicitly ask for logging.
-Prefer over-capturing in `HYPOTHESIS_LAB.md` over losing potentially valuable ideas.
+Preserve consequential unresolved ideas at the capture boundary when the selected capture strength includes them; this destination does not override capture timing.
 
 ### Clean up `HYPOTHESIS_LAB.md`
 
@@ -330,7 +324,9 @@ This file is used in the `academic` profile. If the profile is `research` or low
 - a visualization is updated or superseded
 - the data source, generation method, or intended use of a visual output should be traceable
 
-When a visual file exists, is generated, or is provided by the user, save a durable copy under the project's figure asset directory before relying on it. The default directory is `figures/` unless `CONTEXT_MANIFEST.md` declares another path.
+Follow the asset storage rule in `FIGURES_LOG.md`: copy accessible original bytes to the chosen asset directory and verify a non-empty saved file before reporting it as saved. The default directory is `figures/` unless `CONTEXT_MANIFEST.md` declares another path. This skill instructs the agent; it cannot retrieve attachments that the host does not expose.
+
+If original bytes are unavailable, record storage as `unavailable` with the reason; do not invent a saved path or substitute a recreation for the original. Preserving accessible transient bytes may happen immediately to avoid losing them; interpretation and canonical log updates still follow conversation capture timing.
 
 Use stable figure IDs for filenames, such as `figures/FIG-001.png`, `figures/FIG-001-source.png`, or `figures/FIG-001-final.svg`. If the asset is not yet a formal figure, save it under `figures/inbox/`, for example `figures/inbox/IMG-YYYY-MM-DD-001.png`, and promote or link it to a `FIG-xxx` path later.
 
@@ -481,13 +477,6 @@ Evaluate:
 
 ## End-of-task behavior
 
-At meaningful stopping points, the AI should:
+Apply the conversation capture rule at meaningful stopping points. Route only qualifying changes to the selected profile's existing canonical files, using the profile-specific fallbacks above.
 
-1. update `RECOVERY_NOTES.md`
-2. route any new ideas into `HYPOTHESIS_LAB.md`
-3. record decisions in `DECISION_LOG.md` if a decision was made
-4. record evidence in `RESEARCH_LOG.md` if that file exists and research or testing occurred; otherwise record direction-changing findings in `DECISION_LOG.md`
-5. review whether `CURRENT_STATE.md` changed
-6. review whether `HUMAN_BRIEF.md` needs refresh when present
-
-Do not duplicate the same content across files unless a short summary is necessary for navigation.
+Update `RECOVERY_NOTES.md` only if the resume pointer changed, and `HUMAN_BRIEF.md` only if present and the human-facing picture changed. Neither is a mandatory end-of-turn write. If no memory responsibility changed, leave all memory files untouched.

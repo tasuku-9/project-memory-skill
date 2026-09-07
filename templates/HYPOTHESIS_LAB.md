@@ -8,9 +8,9 @@ Do not promote anything directly from this file to `CURRENT_STATE.md`.
 
 ## Operating rule
 
-The AI agent should capture new ideas here automatically during the chat or coding session.
+Use the Conversation capture policy in `DOCS_GUIDE.md` and the capture strength in `CONTEXT_MANIFEST.md` before adding ideas here.
 Do not require the human to explicitly ask for logging.
-Prefer over-capturing here over losing a potentially useful idea.
+At a capture boundary, preserve eligible unresolved ideas as unverified. This file is a destination, not an immediate write trigger.
 
 ## Maintenance policy
 

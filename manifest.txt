@@ -47,4 +47,5 @@ templates/ROADMAP.md
 templates/light/CURRENT_STATE.md
 templates/light/DOCS_GUIDE.md
 templates/light/LOGBOOK.md
+tests/test_regressions.py
 tests/test_smoke.py

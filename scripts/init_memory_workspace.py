@@ -12,6 +12,8 @@ import datetime as dt
 import shutil
 from pathlib import Path
 
+from memory_common import MemoryWorkspace, workspace_path
+
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES_DIR = PACKAGE_ROOT / "templates"
 PROFILES_DIR = PACKAGE_ROOT / "profiles"
@@ -70,18 +72,6 @@ def load_profile(profile: str) -> list[str]:
 
 def has_doc(files: list[str], rel_path: str) -> bool:
     return rel_path in files
-
-
-def normalize_memory_dir(value: str | None) -> str:
-    if value is None:
-        return ""
-    value = value.strip().replace("\\", "/")
-    if value in {"", ".", "./"}:
-        return ""
-    path = Path(value)
-    if path.is_absolute() or ".." in path.parts:
-        raise SystemExit("--memory-dir must be a relative directory inside the target workspace.")
-    return path.as_posix().strip("/")
 
 
 def display_path(rel_path: str, memory_dir: str = "") -> str:
@@ -443,7 +433,7 @@ def copy_file(rel_path: str, target_dir: Path, project_name: str, today: str, pr
 def main() -> int:
     parser = argparse.ArgumentParser(description="Initialize continuity memory docs in a project directory.")
     parser.add_argument("target", help="Target project/workspace directory")
-    parser.add_argument("--profile", choices=["light", "standard", "research", "academic"], default="standard")
+    parser.add_argument("--profile", choices=["light", "standard", "research", "academic"], help="Defaults to standard for new workspaces; preserves the profile on repeat initialization")
     parser.add_argument("--project-name", help="Project name for template placeholders")
     parser.add_argument("--date", help="Date to use for template placeholders, default: today")
     parser.add_argument("--memory-dir", help="Place memory files in a relative subdirectory, for example: memory")
@@ -452,39 +442,56 @@ def main() -> int:
     args = parser.parse_args()
 
     target_dir = Path(args.target).expanduser().resolve()
+    if target_dir.exists() and not target_dir.is_dir():
+        parser.error("Target must be a directory; no files changed.")
     project_name = args.project_name or target_dir.name
     today = validate_iso_date(args.date) if args.date else dt.date.today().isoformat()
-    files = load_profile(args.profile)
-    explicit_memory_dir = args.memory_dir is not None
-    memory_dir = normalize_memory_dir(args.memory_dir)
-    explicit_root_collisions = find_collisions(target_dir, files) if explicit_memory_dir and not memory_dir and not args.overwrite else []
-    collisions = [] if explicit_memory_dir or args.overwrite else find_collisions(target_dir, files)
-    auto_memory_dir = False
-    if collisions:
-        memory_dir = "memory"
-        auto_memory_dir = True
+    try:
+        workspace = MemoryWorkspace(target_dir, args.memory_dir)
+        existing = workspace.manifest_path.is_file()
+        profile = args.profile or (workspace.profile() if existing else "standard")
+        if existing and profile != workspace.profile():
+            parser.error("An existing workspace uses a different profile. Migrate it explicitly; no files were changed.")
+        if existing and not args.overwrite:
+            print(f"Existing memory workspace: {workspace.memory_dir or '.'} (Profile: {profile}). No files changed; use audit to check it.")
+            return 0
+        if existing and any(location != workspace.default_location(logical) for logical, location in workspace.locations.items()):
+            parser.error("Cannot overwrite a workspace with customized canonical locations. Update its docs explicitly.")
+        files = load_profile(profile)
+        memory_dir = workspace.memory_dir
+        collisions = find_collisions(target_dir, files) if args.memory_dir is None and not existing and not args.overwrite else []
+        auto_memory_dir = bool(collisions)
+        if collisions:
+            memory_dir = "memory"
+        destination = workspace_path(target_dir, memory_dir or ".")
+        if destination.exists() and not destination.is_dir():
+            parser.error("Memory destination must be a directory; no files changed.")
+        destination_collisions = find_collisions(destination, files)
+        if destination_collisions and not args.overwrite:
+            parser.error("Existing files at the memory destination; refusing a partial workspace. Choose an unused --memory-dir. No files changed.")
+        for rel in files:
+            path = workspace_path(target_dir, display_path(rel, memory_dir))
+            if path.exists() and not path.is_file():
+                parser.error(f"Expected a file at {display_path(rel, memory_dir)}; no files changed.")
+    except ValueError as exc:
+        parser.error(str(exc))
 
     if not args.dry_run:
         (target_dir / memory_dir).mkdir(parents=True, exist_ok=True) if memory_dir else target_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Target: {target_dir}")
-    print(f"Profile: {args.profile}")
+    print(f"Profile: {profile}")
     print(f"Project name: {project_name}")
     print(f"Date: {today}")
     print(f"Memory directory: {memory_dir or '.'}")
     if auto_memory_dir:
         print(f"Detected existing same-name files; writing memory workspace under `{memory_dir}/`.")
         print("Collisions: " + ", ".join(collisions))
-    if explicit_root_collisions:
-        print("WARNING: Existing root files detected and --memory-dir . was explicitly requested.")
-        print("This may create a partial memory workspace mixed with user-owned project files.")
-        print("Use --memory-dir memory unless this is intentional.")
-        print("Collisions: " + ", ".join(explicit_root_collisions))
     print("")
 
     counts: dict[str, int] = {}
     for rel_path in files:
-        out_path, status = copy_file(rel_path, target_dir, project_name, today, args.profile, files, memory_dir, args.overwrite, args.dry_run)
+        out_path, status = copy_file(rel_path, target_dir, project_name, today, profile, files, memory_dir, args.overwrite, args.dry_run)
         counts[status] = counts.get(status, 0) + 1
         print(f"{status:16} {out_path}")
 

@@ -248,28 +248,19 @@ class SmokeTests(unittest.TestCase):
         self.assertIn("Missing files: none", audit_result.stdout)
         self.assertIn("Warnings: none", audit_result.stdout)
 
-    def test_audit_warns_on_explicit_root_collision(self) -> None:
+    def test_init_refuses_explicit_root_collision_without_partial_writes(self) -> None:
         workspace = self.make_workspace("collision-explicit-root-workspace")
         (workspace / "README.md").write_text("# Existing README\n", encoding="utf-8")
         (workspace / "ROADMAP.md").write_text("# Existing Roadmap\n", encoding="utf-8")
-        init_result = run_script(
-            str(SCRIPTS_DIR / "init_memory_workspace.py"),
-            str(workspace),
-            "--profile",
-            "standard",
-            "--memory-dir",
-            ".",
+        init_result = subprocess.run(
+            [sys.executable, str(SCRIPTS_DIR / "init_memory_workspace.py"),
+             str(workspace), "--profile", "standard", "--memory-dir", "."],
+            capture_output=True, text=True,
         )
-        self.assertIn("WARNING: Existing root files detected", init_result.stdout)
-        audit_result = run_script(
-            str(SCRIPTS_DIR / "audit_memory_workspace.py"),
-            str(workspace),
-            "--profile",
-            "standard",
-            "--memory-dir",
-            ".",
-        )
-        self.assertIn("ROADMAP.md: Missing expected section", audit_result.stdout)
+        self.assertNotEqual(0, init_result.returncode)
+        self.assertIn("refusing a partial workspace", init_result.stderr)
+        self.assertEqual({"README.md", "ROADMAP.md"}, {path.name for path in workspace.iterdir()})
+        self.assertEqual("# Existing Roadmap\n", (workspace / "ROADMAP.md").read_text(encoding="utf-8"))
 
     def test_strict_audit_returns_nonzero_on_missing(self) -> None:
         workspace = self.make_workspace("strict-missing-workspace")

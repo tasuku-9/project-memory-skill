@@ -31,18 +31,15 @@ For small, obvious one-file updates, a one-sentence plan is enough.
 
 ## Conversation capture
 
-Do not wait for the human to explicitly ask for logging.
+First apply the capture strength in `CONTEXT_MANIFEST.md` to decide what is eligible. File routing below does not override that scope or the timing rule.
 
-Do not write to canonical memory files at the first appearance of an idea.
-Treat new hypotheses, decisions, observations, blockers, risks, and next actions as capture candidates until they stabilize.
-Keep capture candidates silently during the current session.
-Do not announce every candidate or repeatedly say that it is being held for later.
+Keep candidates silently while the discussion develops. Automatic writes happen at a topic change, conclusion, or genuine stopping point, not at the first appearance of an idea or merely because it sounds clear. An explicit request to record something can override the wait.
 
-Write capture candidates to memory when the topic changes, the discussion reaches a conclusion, the session is ending or may be interrupted, the human explicitly asks to record something, or a decision, result, blocker, or next action becomes clear enough to preserve.
-After writing, briefly report what was recorded and where.
+At that boundary, write only the latest outcome that changes project memory. Do not preserve superseded drafts or withdrawn proposals as current decisions. Still-useful unresolved ideas may be recorded as unverified when the selected capture strength includes them.
 
-Capture only material that changes project memory.
-Do not summarize routine conversation, temporary phrasing, or early ideas that are still being refined.
+Use the update plan above for necessary edits, then briefly report actual writes. A boundary does not require an edit: skip unchanged entries and checkpoints. Do not announce that candidates are being held or that nothing was written during ordinary conversation.
+
+This skill cannot recover session-local candidates lost before a write. Copying accessible transient attachments to durable storage can happen immediately; their interpretation and canonical log entries still follow this capture policy.
 
 Use `RECOVERY_NOTES.md` only as a short resume pointer.
 Do not make it the source of truth.
@@ -105,10 +102,10 @@ Avoid:
 
 ### New idea appears
 
-1. Hold it as a silent capture candidate until it stabilizes.
+1. Apply Conversation capture first, including the selected capture strength; hold eligible ideas silently until a capture boundary.
 2. If it remains worth preserving, add it to `LOGBOOK.md` with `type: hypothesis` or `type: note`.
 3. If it becomes true now, update `CURRENT_STATE.md`.
-4. If the session may stop, update `RECOVERY_NOTES.md`.
+4. If the session reaches a stopping point and the resume pointer changed, update `RECOVERY_NOTES.md`.
 
 ### Observation or result appears
 

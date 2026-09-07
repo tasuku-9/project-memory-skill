@@ -35,6 +35,8 @@ For non-trivial work, briefly state which memory files will be read and which re
 
 Memory root: `{{MEMORY_ROOT}}`
 
+Canonical locations are relative to the project root, not this manifest's directory. Scripts use these mappings; omitted logical files default to the directory containing this manifest. Keep this manifest at its declared location.
+
 {{CANONICAL_LOCATIONS}}
 
 ## Conflict handling

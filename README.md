@@ -95,6 +95,10 @@ Adopt an existing project without overwriting same-name files:
 python scripts/init_memory_workspace.py /path/to/project --profile standard --memory-dir memory
 ```
 
+Repeating init on an existing memory workspace leaves it unchanged. Init refuses colliding destination files instead of producing a partial workspace. Profile migrations are separate from initialization; `--overwrite` intentionally resets templates only for the same profile without customized locations.
+
+Audit and handoff use the project-root-relative Canonical locations table in `CONTEXT_MANIFEST.md`. When multiple manifests exist, select the intended workspace with `--memory-dir`.
+
 Audit an existing workspace:
 
 ```bash
@@ -107,7 +111,7 @@ Generate a handoff brief from existing docs:
 python scripts/make_handoff_brief.py /path/to/project
 ```
 
-Handoff briefs redact likely secrets by default. Use `--fail-on-secret` when automation should stop if secret-like material is detected.
+Handoff briefs redact likely secrets before section extraction or truncation. Use `--fail-on-secret` when automation should stop if secret-like material is detected in source docs read for the brief, even outside the final excerpts. Detection is heuristic, not a privacy guarantee; review before sharing.
 
 ## Example prompts
 
@@ -177,7 +181,7 @@ For managing a research paper, thesis, publication, or any complex project that 
 - `LITERATURE_NOTES.md` — prior work and its relevance to your research
 - `FIGURES_LOG.md` — every figure and table linked to its data source and generation method
 
-The academic / publication-grade profile connects literature to hypotheses, tracks which findings support or challenge your claims, and ensures every figure is saved and reproducible. By default, durable visual assets, including user-provided images and screenshots, are saved under `figures/` and linked from `FIGURES_LOG.md`. The promotion rules enforce that only evidence-backed claims enter your results.
+The academic / publication-grade profile connects literature to hypotheses and tracks which findings support or challenge your claims. It instructs the agent to preserve accessible original visual assets under `figures/` and link them from `FIGURES_LOG.md`; it is not an attachment downloader or a guarantee of reproducibility. Mark storage as `saved` only after verifying the local file, or `pending` / `unavailable` when it has not been preserved. Audit checks recorded asset paths for missing or empty files. Promotion rules require support before treating claims as current truth.
 
 ## Agent integration
 
@@ -200,7 +204,7 @@ This only works if the memory lives in normal files in the repository — not in
 
 **README stays the entrance, not the dump.** `CURRENT_STATE.md` holds the canonical truth. This prevents setup instructions, decisions, hypotheses, and recovery notes from collapsing into one overloaded file.
 
-**Capture broadly, promote narrowly.** `HYPOTHESIS_LAB.md` should capture more than you think you need. The cost of over-capturing is lower than losing a useful idea.
+**Capture broadly, promote narrowly.** Preserve consequential unresolved ideas as unverified when the selected capture strength includes them. Write at a topic boundary, conclusion, or genuine stopping point, not at the first mention; unchanged memory needs no write. An explicit request to record something can override the wait.
 
 **Human-reviewed cleanup.** AI agents may propose cleanup candidates for `HYPOTHESIS_LAB.md`, grouped as merge, promote, link to evidence, mark as dropped, or delete. They should not remove hypotheses or raw sparks without human approval.
 
